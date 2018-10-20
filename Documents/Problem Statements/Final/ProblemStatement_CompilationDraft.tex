@@ -13,37 +13,50 @@
 
 \maketitle
 \begin{abstract}
-Augmented reality sandboxes (AR Sandbox) have become increasingly popular in recent years with topographical image mapping and water flow simulations. The basic concept behind an AR sandbox is simple. The unit is comprised of a physical box of sand, video projector, depth sensor, and computer. As users interact with the sandbox and shape the sand within they will also manipulate in real time an image that is projected on the sand. Despite this increasing popularity AR sandboxes still have a great deal of untapped potential.
+Augmented reality sandboxes (AR Sandbox) have become increasingly popular in recent years with topographical image mapping and water flow simulations. The basic concept behind an AR sandbox is simple. The unit is comprised of a physical box of sand, video projector, depth sensor, and computer. As users interact with the sandbox and shape the sand within they will also manipulate in real time an image that is projected on the sand. Despite this increasing popularity AR sandboxes still have a great deal of untapped potential. Oregon State University's college of Civil and Construction Engineering (CCE) has an AR Sandbox that they would like to generally improve, and add a traffic simulation module to it. 
+
 \\
-This document outlines a plan to use the augmented reality (AR) sandbox at Oregon State University as a means to improve teaching and planning methods in the fields of construction and civil engineering. The proposed changes will add new functionality in the form of a marker-based system for adding various interactive elements to a sandbox. These elements will be used for traffic simulations and the general construction of an image to be displayed on the sand.
+
+This document outlines a plan to use CCE's AR Sandbox as a means to improve teaching and planning methods in the fields of construction and civil engineering, focusing on traffic simulations. The proposed changes will add new functionality in the form of a marker-based system for adding various interactive elements to a sandbox. These elements will be used for traffic simulations and the general construction of an image to be displayed on the sand.
 \end{abstract}
 \newpage
 
 \section{Problem Description} 
- Computer simulations are an effective tool in planning and teaching. Using simulations engineers and scientists can test scenarios in simulated environments without any real-world risk. This technology also provides an opportunity for students to learn in a practical, hands on way without having to leave a classroom. The problem with most computer simulations though is that they require a software engineer to design and setup. Our goal is to reduce this dependency by creating a model for building working computer simulations using physical objects and augmented reality.
+
 \\
-Currently, the college of Civil and Construction Engineering's (CCE) Augmented Reality Sandbox (AR Sandbox) is incomplete. Civil engineering professors want to be able to use the AR Sandbox as a traffic simulation environment that can be built and altered using marker-based object placement. Markers would be physical objects placed in the sandbox that are uniquely identifiable by current or additional hardware. The Markers will signal the system to project images of arbitrary objects, such as buildings or street lights, into the sandbox. These objects would then be added to a digital scene on the control computer where the simulation would run its logic.
+The main issues with the Augmented Reality Sandbox are functionality and usability. For functionality, the college of Civil and Construction Engineering (CCE) would like to add a traffic simulation module that can add and alter simulations based on objects placed in the sandbox. This module will be used in classrooms to interactively show how different obstacles and traffic patters affect traffic flow. 
+
 \\
-This feature is the main purpose for this project, but problems arise with the current implementation of the software. The software is hard to set up, the calibration for the depth sensor is nearly non-existent, and the projected elevation images do not display contour lines. We will need to increase usability by refining the current software to meet these needs before moving on to the new features.
+Civil engineering professors want to be able to use the AR Sandbox as a traffic simulation environment that can be built and altered using marker-based object placement. Markers would be physical objects placed in the sandbox that are uniquely identifiable by current hardware. The Markers will signal the system to project images of arbitrary objects, such as buildings or street lights, into the sandbox. These objects would then be added to a digital scene on the control computer where the simulation would run its logic.
+
+\\
+Along with the new traffic module, we will need to add a feature and some improvements to the base application. The base application will need to be able to save a terrain, then help the user reproduce old terrain by showing where more material needs to be added and removed. For improvements, we will need to change the gradient currently shown for the topographical map, to contour lines. Along with the above issues, the depth sensing accuracy and the accuracy of the projection will need to be improved. By refining the current software to meet these needs, we can improve all other modules that will be built on this software platform.
 
 \section{Proposed Solution}
-For our primary goal, creating a traffic simulation for use in the classroom, we will be expanding upon a terrain mesh generated by the AR Sandbox in Unity Game Engine. This mesh is formed with the current sand height information the AR Sandbox’s depth camera reads in real-time. On this mesh, we will impose pre-made road patterns and run analysis of this road network with a pre-built traffic simulator. We can build the scenes and run the simulations using Unity then project a top-down view of this simulation onto the sandbox. Unity makes it simple to create 3D scenes and has a built-in physics engine that will be useful for simulations.
+For our primary goal, creating a traffic simulation for use in the classroom, we will be expanding upon a terrain mesh generated by the AR Sandbox in Unity Game Engine. This mesh is formed with the current sand height information the AR Sandbox’s depth camera reads in real-time. On this mesh, we will impose pre-made road patterns and run analysis of this road network with a pre-built traffic simulator. We can build the scenes and run the simulations using Unity then project a top-down view of this simulation onto the sandbox. Unity makes it simple to create 3D scenes and has a built-in physics engine that will be useful for displaying simulations. For the simulation themselves, we will use SUMO: an open sourced traffic simulation. This simulation platform can handle 3d meshes, and has been used by Unity applications in the past. 
+
 \\
-To implement the AR Marker functionality, we will use the software development kit Vuforia. Vuforia uses computer vision to track and identify real-world objects. It's integrated well with Unity and provides an easy, powerful interface for digitally re-creating a 3D object through object recognition. Objects, when placed in the sandbox and recognized, will match a pre-defined Unity asset which will be drawn to a scene a where the marker a placed.
+To implement the AR Marker functionality, we will use the software development kit Vuforia. Vuforia uses computer vision to track and identify real-world objects. It is deeply integrated with Unity and provides an easy, powerful interface for identifying defined objects. With it, we can easily map real-world objects to in-Unity assets. When an object is placed in the sandbox and recognized, the corresponding Unity asset will be drawn to the scene where the marker is placed. We will test and experiment using Vuforia with various materials/objects while the projector is on. We want object recognition to work while the projector is displaying. 
+
 \\
-To fix the usability problems of the current system we will need to conduct research on how the system is used. We know how the system works but we don't know how civil engineering professors and students use it currently. Once we have this information we can begin to design a new user interface that will be easier to use and tailored to the people using it.
+To fix the usability problems of the current system, we will need to do a study on how this box will be used by professors and students. We know how the system works, but don't know how civil engineering professors and students use it currently. Once we have this information, we can begin to design a new user interface that will be easier to use and tailored to the people using it. While we implement these, we will perform usability studies with professors and students to determine if the UI we create is an improvement.
 
 \section{Performance Metrics}
 The primary metric by which this project will be evaluated is the creation of a working traffic simulation. As such there are several performance metrics we must achieve to ensure this goal is met. 
+\begin{itemize}
+	\item Users will be able to start and set up either the topographic or traffic simulation models within five minutes./ 
+	\item Users will be able to use the traffic simulator to show traffic flow in order to improve student comprehension. 
+	\item Users will be able to use real-world markers to alter parameters in the traffic simulation including being abe to add a work-zone and altering stop signs to be stop lights. 
+\end{itemize}\vspace{5mm}
+
 \\
-\begin{enumerate}
-	\item{}
-	We need to deliver a programable and expandable marker system that can support a wide variety of marker types.
-	\item{}
-	We need to deliver a system capable of translating markers into proper models that can be displayed on the surface of the sand.
-	\item{}
-	We need to deliver a configurable traffic simulation that is impacted by the placement of markers.
-	\item{}
-	We need to refine the system to be more useable by civil engineering students.
-\end{enumerate}
+The secondary goal includes usability improvements to the base application. The following are performance metrics to ensure we achieved the goal. 
+
+\begin{itemize}
+	\item Users will be able to save current terrains inside of the application. 
+	\item Users will be able to load old terrains and recreate them with help from the application. 
+	\item In topography mode, the system will display contour onto the terrain.
+	\item The accuracy of the contour lines will be more consistent and accurate than the current state. 
+\end{itemize}
+
 \end{document}
