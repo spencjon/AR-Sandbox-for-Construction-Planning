@@ -41,7 +41,7 @@ Unity, formerly known as Unity3D, is a massively popular game engine used to cre
 
 Games created with Unity can be built for virtually every major platform. This includes native support for virtual reality (VR) and augmented reality (AR) systems, such as Oculus Rift, Steam VR, Apple ARKit, Vuforia, and others \cite{unity-multiplatform}. Native AR integration is an especially important consideration for this project, and Unity has some of the best support for AR.
 
-The Unity website provides hundreds of first-party tutorials for teaching developers how to use the engine \cite{unity-tutorials}. This is in addition to the large community of Unity-users providing their own guides and input. The built-in Unity Asset Store is another great resource where assets created by members of the Unity community can be purchased and downloaded straight into the Unity editor. Available for purchase are sprites and 3D models, sound effects and music, shaders and particle effects, demos and tutorials, and tools for animation, physics, UI, networking, AI, and much more \cite{unity-asset-store}. All of this makes Unity a great tool for creating games and simulations quickly and easily.
+The Unity website provides hundreds of first-party tutorials for teaching developers how to use the engine \cite{unity-tutorials}. This is in addition to the large community of Unity users providing their own guides and input. The built-in Unity Asset Store is another great resource where assets created by members of the Unity community can be purchased and downloaded directly into the Unity editor. Available for purchase are sprites and 3D models, sound effects and music, shaders and particle effects, demos and tutorials, and tools for animation, physics, UI, networking, AI, and much more \cite{unity-asset-store}. All of this makes Unity a great tool for creating games and simulations quickly and easily.
 
 \subsection{Unreal}
 Epic Games' Unreal Engine is a popular, powerful game engine with support for many platforms including VR and, somewhat recently, AR. It has an extensive set of features, especially for a free engine. It touts advanced graphics capabilities, a robust multiplayer framework, and a powerful audio engine \cite{unreal-features}. In terms of graphics, especially, Unreal is on the cutting edge, with support for advanced dynamic lighting and complex particle systems. One of the most popular features of Unreal is Blueprints, a visual scripting system that (theoretically) allows developers to script scenes without writing any code \cite{unreal-blueprints}.
@@ -55,13 +55,13 @@ Godot is a free and open-source, cross-platform game engine released in 2014. As
 
 The Godot engine is fully-featured, with everything necessary for a game engine: dynamic lighting, shaders, physics, animations, etc. It supports several platforms, including desktop, mobile, and web. In addition, Godot includes a built-in debugger and profiler, supports several scripting languages, and provides scene instancing for easier use across teams \cite{godot-features}.
 
-Unfortunately, Godot does not have any native AR support. Such a feature set is in the works, and AR development may still be possible with Godot, but a lack of built-in support will make it more difficult than with Unity or Unreal.
+Unfortunately, Godot does not have any native AR support. Such a feature set is in the works, and AR development may still be possible with Godot, but a lack of built-in support will make it much more difficult than with Unity or Unreal.
 
 \subsection{Conclusion}
 The current sandbox is already built with Unity, so Unity is the obvious choice for game engine. Additionally, while Unreal seems like a superior engine overall, with a much more impressive feature set, Unity has, by far, the best support for augmented reality than either of the other engines considered. This makes it the clear choice for the purposes of the AR sandbox.
 
 \section{Marker Recognition Software}
-As this project focuses on adding marker-based enhancements to the existing sandbox, we will need software that is capable of recognizing and tracking physical markers through use of a camera. This section will explore three possible AR software development kits (SDKs) that can accomplish this task. Importantly, the only SDKs considered will be those that can be built to Microsoft Windows, as that is the operating system we will be using. As such, tools like Apple's ARKit and Google's ARCore will not be considered, since they are exclusively for iOS and Android development, respectively.
+As this project focuses on adding marker-based enhancements to the existing sandbox, we will need software that is capable of recognizing and tracking physical markers through use of a camera. This section will explore three possible AR software development kits (SDKs) that can accomplish this task. Importantly, the only SDKs considered will be those that can be built to Microsoft Windows, as that is the operating system that will be used. As such, tools like Apple's ARKit and Google's ARCore will not be considered, since they are exclusively for iOS and Android development, respectively.
 
 \subsection{Vuforia}
 Vuforia is a widely-used SDK that employs computer vision technology to detect and track targets through a camera. It is the most popular AR engine in the world, used by more than half a million developers \cite{vuforia-engine}. Vuforia is free to use during development, but includes steep licensing costs upon deployment. 
@@ -77,14 +77,14 @@ Finally, Vuforia comes with Unity integration, meaning that the Vuforia SDK can 
 \subsection{EasyAR}
 EasyAR is a multiplatform SDK developed by VisionStar Information Technology. The basic version is completely free for commercial use. Like Vuforia, EasyAR supports tracking of both images and 3D objects. However, the latter requires the paid "Pro" version \cite{easyar-prices}.
 
- EasyAR is available for multiple platforms, including Android, iOS, Windows, and OS X, and has support for Unity \cite{easyar-platforms}. It is not as integrated into Unity as Vuforia, but a plugin is available to download from the Asset Store.
+ EasyAR is available for multiple platforms, including Android, iOS, Windows, and OS X, and has support for Unity \cite{easyar-platforms}. It is not integrated into Unity like Vuforia is, but a plugin is available to download from the Asset Store.
 
 Documentation for EasyAR is limited and somewhat disorganized. Additionally, VisionStar is based in Shanghai and their website and documentation consist of less-than-perfect English. On the other hand, there are project samples available for Android, iOS, Windows, and Unity, which will be helpful for starting a project \cite{easyar-docs}.
 
 \subsection{ARToolKit}
 ARToolKit is an open-source AR library originally developed at the Human Interface Technology Laboratory at the University of Washington. It is primarily targeted toward researchers, but has been used to create a variety of impressive AR programs.
 
-Like the previous AR technologies, ARToolkit uses computer vision to track images. Prepared images must have a certain pattern. Specifically, markers must be square and consist of a large black border surrounding an image or design \cite{artoolkit-docs}. Along with image tracking, ARToolKit also allows for tracking of unprepared planar surfaces \cite{artoolkit-features}.
+Like the previous AR technologies, ARToolkit uses computer vision to track images. However, images must abide by a certain pattern. Specifically, markers must be square and consist of a large black border surrounding an image or design \cite{artoolkit-docs}. Along with image tracking, ARToolKit also allows for tracking of unprepared planar surfaces \cite{artoolkit-features}.
 
 ARToolKit is available for multiple platforms, including Android, iOS, Windows, OS X, and Linux. There is also a plugin for Unity.
 
@@ -108,7 +108,7 @@ In addition, Vuforia suggests that a target should be no smaller than one tenth 
 
 EasyAR similarly recommends that the image be "clear and rich-textured" \cite{easyar-images}.
 
-Using image targets would be helpful to users of the AR sandbox as they would provide more useful context than coded markers. For example, a marker that represents a traffic light could be of an image that is reminiscent of a traffic light. On the other hand, they could potentially be more difficult for the AR engine to detect than coded markers.
+Using image targets would be helpful to users of the AR sandbox as they would provide more useful context than coded markers. For example, a marker that represents a traffic light could be of an image that is reminiscent of a traffic light. On the other hand, images could potentially be more difficult for the AR engine to detect than coded markers.
 
 \subsection{Objects}
 Of the three options explored here, 3D objects are by far the most difficult to detect and track, even using advanced computer vision. Furthermore, EasyAR only offers object tracking with the paid Pro license \cite{easyar-prices}, and ARToolKit does not support object tracking at all \cite{artoolkit-features}.
@@ -116,7 +116,7 @@ Of the three options explored here, 3D objects are by far the most difficult to 
 Object tracking is useful when an object must be able to interact with a digital scene, but is not necessary if the marker will simply represent a digital item in the scene, as will be the case with the AR sandbox. Objects can also be useful when a marker must be viewable from all angles. This will not be a factor in the AR sandbox, however, since the camera will be stationary and always pointed at the same location.
 
 \subsection{Conclusion}
-Images seem to be the ideal choice for use in the AR sandbox. As already explained, they would provide users with more visual context than coded markers, but should be much easier to detect and track than 3D objects. That said, it may be necessary to use coded markers, depending on how well our AR engine is able to track small images from a distance. The camera is fixed two or three feet above the sandbox, and markers will ideally be no more than a couple of inches wide. Whether or not the AR engine will be able to track such small images will need to be tested, and "downgrading" to coded markers may be deemed necessary. In fact, it may be safest to begin with using coded markers and plan to eventually switch to image targets.
+Images seem to be the ideal choice for use in the AR sandbox. As already explained, they would provide users with more visual context than coded markers, but should be much easier to detect and track than 3D objects. That said, it may be necessary to use coded markers, depending on how well our AR engine is able to track small images from a distance. The camera is fixed two or three feet above the sandbox, and markers will ideally be no more than two or three wide. Whether or not the AR engine will be able to track such small images will need to be tested, and "downgrading" to coded markers may be deemed necessary. In fact, it may be safest to begin with using coded markers and plan to eventually switch to image targets.
 
 \newpage
 \begin{thebibliography}{1}
