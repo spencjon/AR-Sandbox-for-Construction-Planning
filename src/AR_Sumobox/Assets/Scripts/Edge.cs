@@ -15,15 +15,16 @@ using UnityEditor;
 public struct Lane
 {
     public string Id { get; set; }
+    public string Edge_Id { get; set; }
     public string Index { get; set; }
-    public string Speed { get; set; }
-    public string Length { get; set; }
-    public string Width { get; set; }
-    public string Allow { get; set; }
-    public string Disallow { get; set; }
-    public string Shape { get; set; }
+    public float Speed { get; set; }
+    public float Length { get; set; }
+    public float Width { get; set; }
+    public List<string> Allow { get; set; }
+    public List<string> Disallow { get; set; }
+    public List<CodingConnected.TraCI.NET.Types.Position2D> Shape { get; set; }
     public bool Built { get; set; }
-    public string DefaultSpeed { get; set; }
+    public float DefaultSpeed { get; set; }
     public bool ConstructionZone { get; set; }
 }
 
@@ -37,11 +38,10 @@ public struct Road
     public string From { get; set; }
     public string To { get; set; }
     public string Name { get; set; }
-    public string Shape { get; set; }
+    public List<CodingConnected.TraCI.NET.Types.Position2D> Shape { get; set; }
     public bool Built { get; set; }
     public string Type { get; set; }
     public string Function { get; set; }
-    public List<Lane> Lanes { get; set; }
     public float Occupancy { get; set; }
 }
 
@@ -59,6 +59,7 @@ public class Edge : MonoBehaviour
     /// The list of the Networks roads.
     /// </summary>    
     public List<Road> RoadList;
+    public List<Lane> LaneList;
     public Shader Road_Shader;
     public Shader Concrete_Shader;
     /// <summary>
@@ -73,6 +74,7 @@ public class Edge : MonoBehaviour
     {
         Edges_GO = GameObject.Find("Edges");
         RoadList = new List<Road>();
+        LaneList = new List<Lane>();
         Edges_GO.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
     }
 
@@ -89,25 +91,7 @@ public class Edge : MonoBehaviour
     public void ClearData()
     {
         RoadList.Clear();
-    }
-
-    /// <summary>
-    /// Sumo shape sting to List of floats point order is
-    /// x1, y1, x2, y2, ....
-    /// <param name="shape">The string to parse the list from.</param>
-    private List<float> ShapeStringToFloatList(string shape)
-    {
-        List<float> points = new List<float>();
-        char[] find = new char[2];
-        find[0] = ',';
-        find[1] = ' ';
-        string[] cuts = shape.Split(find);
-        List<string> cutList = cuts.ToList();
-        foreach (string cut in cutList)
-        {
-            points.Add(float.Parse(cut, CultureInfo.InvariantCulture.NumberFormat));
-        }
-        return points;
+        LaneList.Clear();
     }
 
     /// <summary>
@@ -119,32 +103,24 @@ public class Edge : MonoBehaviour
     /// <param name="type">"Road" or "Pedestrian". This will set the materials used.</param>
     /// <param name="width">The road width as a float.</param>
     /// <param name="flat">True, use flat LineRenderer. False, use shader to extrude LineRenderer.</param>
-    private void BuildShapeLR(List<Vector3> shapelist, string id, string type, float width, bool flat)
+    private void BuildShapeLR(List<CodingConnected.TraCI.NET.Types.Position2D> shapelist, string id, string type, float width, bool flat)
     {
+        List<Vector3> shape = new List<Vector3>();
+        foreach(CodingConnected.TraCI.NET.Types.Position2D pos in shapelist)
+        {
+            shape.Add(new Vector3((float)pos.X, 0.0f, (float)pos.Y));
+        }
+
         GameObject newShape = new GameObject();
         newShape.name = id;
         LineRenderer LR = newShape.AddComponent<LineRenderer>();
         if (flat)
         {
-            if (type == "Road")
-            {
-                LR.material = Resources.Load("Materials/Road_Material", typeof(Material)) as Material;
-            }
-            else
-            {
-                LR.material = Resources.Load("Materials/Concrete_Material", typeof(Material)) as Material;
-            }
+            LR.material = Resources.Load("Materials/Road_Material", typeof(Material)) as Material;  
         }
         else
         {
-            if (type == "Road")
-            {
-                LR.material = new Material(Road_Shader);
-            }
-            else
-            {
-                LR.material = new Material(Concrete_Shader);
-            }
+            LR.material = new Material(Road_Shader);
         }
         LR.useWorldSpace = true;
         LR.textureMode = LineTextureMode.Tile;
@@ -153,7 +129,7 @@ public class Edge : MonoBehaviour
         LR.numCapVertices = 5;
         LR.numCornerVertices = 5;
         LR.positionCount = shapelist.Count;
-        LR.SetPositions(shapelist.ToArray());
+        LR.SetPositions(shape.ToArray());
         LR.transform.parent = Edges_GO.transform;
     }
 
@@ -227,73 +203,9 @@ public class Edge : MonoBehaviour
     /// </summary>
     public void BuildEdges()
     {
-        foreach(Road road in RoadList)
+        foreach(Lane lane in LaneList)
         {
-            if (road.Shape != null && road.Function != "internal")
-            {
-                string rtype;
-                List<float> rs = ShapeStringToFloatList(road.Shape);
-                List<Vector3> rsv = new List<Vector3>();
-                for(int i = 0; i < rs.Count; i+=2)
-                {
-                    rsv.Add(new Vector3(rs[i], 0.1f,rs[i + 1]));
-                }
-
-                if (road.Type != null)
-                {
-                    if (road.Type.Contains("pedestrian"))
-                    {
-                        //rtype = "Other";
-                        rtype = "Road";
-                    }
-                    else
-                    {
-                        rtype = "Road";
-                    }
-                }
-                else
-                {
-                    rtype = "Road";
-                }
-                //BuildShapeLR(rsv, road.Id, rtype, LANEWIDTH, true);
-                //BuildShapeMesh(rsv, road.Id, rtype, LANEWIDTH);
-            }
-
-           if(road.Function != "internal")
-            {
-                foreach (Lane lane in road.Lanes)
-                {
-                    if (lane.Shape != null)
-                    {
-                        string ltype;
-                        List<float> ls = ShapeStringToFloatList(lane.Shape);
-                        List<Vector3> lsv = new List<Vector3>();
-                        for (int j = 0; j < ls.Count; j += 2)
-                        {
-                            lsv.Add(new Vector3(ls[j], 0.1f, ls[j + 1]));
-                        }
-
-                        if (lane.Disallow != null)
-                        {
-                            if (lane.Disallow.Contains("pedestrian"))
-                            {
-                                ltype = "Road";
-                            }
-                            else
-                            {
-                                //ltype = "Other";
-                                ltype = "Road";
-                            }
-                        }
-                        else
-                        {
-                            ltype = "Road";
-                        }
-                        BuildShapeLR(lsv, lane.Id, ltype, LANEWIDTH, true);
-                        //BuildShapeMesh(lsv, lane.Id, ltype, LANEWIDTH);
-                    }
-                }
-            }
+            BuildShapeLR(lane.Shape, lane.Id, "lane", lane.Width, true);
         }
     }
 }

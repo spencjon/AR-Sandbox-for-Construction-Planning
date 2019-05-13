@@ -52,14 +52,11 @@ public class MarkerSetWorkZone : MonoBehaviour
             // Populate the list of roads with the child objects of Edges
             foreach (Transform child in lanesParentObject.transform)
             {
-                // Some of the children are roads (not lanes) - we only want the lanes
-                if (edgeScript.RoadList.Any(r => r.Lanes.Any(l => l.Id == child.name)))
-                    lanes.Add(child.gameObject);
+                lanes.Add(child.gameObject);
             }
 
             // Set the trigger actions to the road bounds
             markerAction.AddTriggerAreas(lanes.Select(l => l.GetComponent<LineRenderer>().bounds));
-
             triggerAreasSet = true;
         }
         
@@ -75,15 +72,14 @@ public class MarkerSetWorkZone : MonoBehaviour
     {
         if (laneIndex >= 0 && laneIndex < lanes.Count)
         {
-            Road road = edgeScript.RoadList.Single(r => r.Lanes.Any(l => l.Id == lanes[laneIndex].name));
-
-            if (road.Lanes.Single(l => l.Id == lanes[laneIndex].name).ConstructionZone)
+            Lane thelane = edgeScript.LaneList.Single(l => l.Id == lanes[laneIndex].name);
+            if (thelane.ConstructionZone)
             {
-                RemoveWorkZone(lanes[laneIndex], road.Id);
+                RemoveWorkZone(lanes[laneIndex], thelane.Edge_Id);
             }
             else
             {
-                SetWorkZone(lanes[laneIndex], road.Id);
+                SetWorkZone(lanes[laneIndex], thelane.Edge_Id);
             }
         }
     }

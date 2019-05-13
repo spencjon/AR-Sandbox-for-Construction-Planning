@@ -140,29 +140,26 @@ public class TraciController : MonoBehaviour
     {
         if (edge == null)
             edge = FindObjectOfType<Edge>();
-
-        Road road = edge.RoadList.Single(r => r.Id == roadId);
-        int laneIndex = road.Lanes.FindIndex(l => l.Id == laneId);
-        Lane lane = road.Lanes[laneIndex];
-
-        if (lane.ConstructionZone)
+        Lane thelane = edge.LaneList.Find(l => l.Id == laneId);
+        int l_index = edge.LaneList.IndexOf(thelane);
+        if (thelane.ConstructionZone)
         {
-            road.Lanes[laneIndex] = new Lane()
+            edge.LaneList[l_index] = new Lane()
             {
-                Id = lane.Id,
-                Index = lane.Index,
-                Speed = lane.DefaultSpeed,
-                Length = lane.Length,
-                Width = lane.Width,
-                Allow = lane.Allow,
-                Disallow = lane.Disallow,
-                Shape = lane.Shape,
-                Built = lane.Built,
-                DefaultSpeed = lane.DefaultSpeed,
+                Id = thelane.Id,
+                Index = thelane.Index,
+                Speed = thelane.DefaultSpeed,
+                Length = thelane.Length,
+                Width = thelane.Width,
+                Allow = thelane.Allow,
+                Disallow = thelane.Disallow,
+                Shape = thelane.Shape,
+                Built = thelane.Built,
+                DefaultSpeed = thelane.DefaultSpeed,
                 ConstructionZone = false
             };
 
-            Client.Edge.SetMaxSpeed(road.Id, double.Parse(lane.DefaultSpeed));
+            Client.Edge.SetMaxSpeed(roadId, thelane.DefaultSpeed);
         }
         else
         {
@@ -180,29 +177,30 @@ public class TraciController : MonoBehaviour
             edge = FindObjectOfType<Edge>();
 
         Road road = edge.RoadList.Single(r => r.Id == roadId);
-
-        for (int i = 0; i < road.Lanes.Count; i++)
+        List<Lane> thelanes = edge.LaneList.FindAll(l => l.Edge_Id == roadId);
+        for (int i = 0; i < thelanes.Count; i++)
         {
-            Lane lane = road.Lanes[i];
+            int l_index = edge.LaneList.IndexOf(thelanes[i]);
 
-            if (lane.ConstructionZone)
+            if (thelanes[i].ConstructionZone)
             {
-                road.Lanes[i] = new Lane()
+                edge.LaneList[l_index] = new Lane()
                 {
-                    Id = lane.Id,
-                    Index = lane.Index,
-                    Speed = lane.DefaultSpeed,
-                    Length = lane.Length,
-                    Width = lane.Width,
-                    Allow = lane.Allow,
-                    Disallow = lane.Disallow,
-                    Shape = lane.Shape,
-                    Built = lane.Built,
-                    DefaultSpeed = lane.DefaultSpeed,
+                    Id = thelanes[i].Id,
+                    Edge_Id = thelanes[i].Edge_Id,
+                    Index = thelanes[i].Index,
+                    Speed = thelanes[i].DefaultSpeed,
+                    Length = thelanes[i].Length,
+                    Width = thelanes[i].Width,
+                    Allow = thelanes[i].Allow,
+                    Disallow = thelanes[i].Disallow,
+                    Shape = thelanes[i].Shape,
+                    Built = thelanes[i].Built,
+                    DefaultSpeed = thelanes[i].DefaultSpeed,
                     ConstructionZone = false
                 };
 
-                Client.Edge.SetMaxSpeed(road.Id, double.Parse(lane.DefaultSpeed));
+                Client.Edge.SetMaxSpeed(road.Id, thelanes[i].DefaultSpeed);
             }
         }
     }
@@ -217,31 +215,31 @@ public class TraciController : MonoBehaviour
             edge = FindObjectOfType<Edge>();
 
         Road road = edge.RoadList.Single(r => r.Id == roadId);
+        List<Lane> thelanes = edge.LaneList.FindAll(l => l.Edge_Id == roadId);
 
-        for (int i = 0; i < road.Lanes.Count; i++)
+        for (int i = 0; i < thelanes.Count; i++)
         {
-            Lane lane = road.Lanes[i];
-
-            if (!lane.ConstructionZone)
+            if (!thelanes[i].ConstructionZone)
             {
-                double newSpeed = ToWorkZoneSpeed(double.Parse(road.Lanes[i].Speed));
+                double newSpeed = ToWorkZoneSpeed(thelanes[i].Speed);
+                int l_index = edge.LaneList.IndexOf(thelanes[i]);
 
-                road.Lanes[i] = new Lane()
+                edge.LaneList[l_index] = new Lane()
                 {
-                    Id = lane.Id,
-                    Index = lane.Index,
-                    Speed = newSpeed.ToString(),
-                    Length = lane.Length,
-                    Width = lane.Width,
-                    Allow = lane.Allow,
-                    Disallow = lane.Disallow,
-                    Shape = lane.Shape,
-                    Built = lane.Built,
-                    DefaultSpeed = lane.DefaultSpeed,
+                    Id = thelanes[i].Id,
+                    Edge_Id = thelanes[i].Edge_Id,
+                    Index = thelanes[i].Index,
+                    Speed = thelanes[i].Speed,
+                    Length = thelanes[i].Length,
+                    Width = thelanes[i].Width,
+                    Allow = thelanes[i].Allow,
+                    Disallow = thelanes[i].Disallow,
+                    Shape = thelanes[i].Shape,
+                    Built = thelanes[i].Built,
+                    DefaultSpeed = thelanes[i].DefaultSpeed,
                     ConstructionZone = true
                 };
-
-                Client.Edge.SetMaxSpeed(road.Id, (double)newSpeed);
+                Client.Edge.SetMaxSpeed(road.Id, newSpeed);
             }
         }
     }
@@ -256,30 +254,30 @@ public class TraciController : MonoBehaviour
         if (edge == null)
             edge = FindObjectOfType<Edge>();
 
-        Road road = edge.RoadList.Single(r => r.Id == roadId);
-        int laneIndex = road.Lanes.FindIndex(l => l.Id == laneId);
-        Lane lane = road.Lanes[laneIndex];
-        
-        if (!lane.ConstructionZone)
-        {
-            double newSpeed = ToWorkZoneSpeed(double.Parse(lane.Speed));
+        Lane thelane = edge.LaneList.Find(l => l.Id == laneId);
+        int l_index = edge.LaneList.IndexOf(thelane);
 
-            road.Lanes[laneIndex] = new Lane()
+        if (!thelane.ConstructionZone)
+        {
+            float newSpeed = (float)ToWorkZoneSpeed(thelane.Speed);
+
+            edge.LaneList[l_index] = new Lane()
             {
-                Id = lane.Id,
-                Index = lane.Index,
-                Speed = newSpeed.ToString(),
-                Length = lane.Length,
-                Width = lane.Width,
-                Allow = lane.Allow,
-                Disallow = lane.Disallow,
-                Shape = lane.Shape,
-                Built = lane.Built,
-                DefaultSpeed = lane.DefaultSpeed,
+                Id = thelane.Id,
+                Edge_Id = thelane.Edge_Id,
+                Index = thelane.Index,
+                Speed = newSpeed,
+                Length = thelane.Length,
+                Width = thelane.Width,
+                Allow = thelane.Allow,
+                Disallow = thelane.Disallow,
+                Shape = thelane.Shape,
+                Built = thelane.Built,
+                DefaultSpeed = thelane.DefaultSpeed,
                 ConstructionZone = true
             };
 
-            Client.Edge.SetMaxSpeed(road.Id, (double)newSpeed);
+            Client.Edge.SetMaxSpeed(roadId, newSpeed);
         }
         else
         {
@@ -294,6 +292,7 @@ public class TraciController : MonoBehaviour
     public void ToggleMesoscopic()
     {
         OccupancyVisual = !OccupancyVisual;
+        VisualsSwitched = true;
     }
 
 
@@ -395,6 +394,18 @@ public class TraciController : MonoBehaviour
             }
             if (CarVisual)
             {
+                
+                if (VisualsSwitched)
+                {
+                    Transform e = GameObject.Find("Edges").transform;
+                    foreach (Transform child in e)
+                    {
+                        
+                        child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Road_Material", typeof(Material)) as Material;
+                    }
+                    VisualsSwitched = false;
+                }
+
                 if (Client != null)
                 {
                     Cars_GO = GameObject.Find("Cars");

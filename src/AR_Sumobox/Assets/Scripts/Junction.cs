@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using UnityEngine;
 using UnityEditor;
+using CodingConnected.TraCI.NET;
 
 [Serializable]
 public struct Intersection
@@ -14,11 +15,11 @@ public struct Intersection
     public string Id { get; set; }
     public string Name { get; set; }
     public string Type { get; set; }
-    public string X { get; set; }
-    public string Y { get; set; }
+    public float X { get; set; }
+    public float Y { get; set; }
     public string IncomingLanes { get; set; }
     public string InternalLanes { get; set; }
-    public string Shape { get; set; }
+    public List<CodingConnected.TraCI.NET.Types.Position2D> Shape { get; set; }
 }
 
 /// <summary>
@@ -53,23 +54,6 @@ public class Junction : MonoBehaviour
         Junction_List.Clear();
     }
 
-    // Sumo shape sting to List of floats point order is
-    // x1, y1, x2, y2, ....
-    private List<float> ShapeStringToFloatList(string shape)
-    {
-        List<float> points = new List<float>();
-        char[] find = new char[2];
-        find[0] = ',';
-        find[1] = ' ';
-        string[] cuts = shape.Split(find);
-        List<string> cutList = cuts.ToList();
-        foreach (string cut in cutList)
-        {
-            points.Add(float.Parse(cut, CultureInfo.InvariantCulture.NumberFormat));
-        }
-        return points;
-    }
-
     /// <summary>
     /// Build an Intersection.
     /// </summary>
@@ -80,21 +64,14 @@ public class Junction : MonoBehaviour
         {
             return;
         }
-        List<float> fshape = ShapeStringToFloatList(inter.Shape);
-        int numverts = fshape.Count() / 2;
 
-        // Center of junction
-        float xjunc = float.Parse(inter.X, CultureInfo.InvariantCulture.NumberFormat);
-        float yjunc = float.Parse(inter.Y, CultureInfo.InvariantCulture.NumberFormat);
-        Vector3 centerpoint = new Vector3(xjunc, yjunc, 0.1f);
-
+        int numverts = inter.Shape.Count();
         if (numverts > 5)
         {
             // Get Meshfilter and create a new mesh
             GameObject chunk = new GameObject();
             chunk.name = inter.Id;
 
-            
             chunk.AddComponent<MeshRenderer>();
             Material m = new Material(Road_Shader);
             chunk.GetComponent<MeshRenderer>().material = m;
@@ -102,13 +79,14 @@ public class Junction : MonoBehaviour
 
             // Build Vertices
             Vector3[] verts = new Vector3[numverts + 1];
-            int vc = 0;
-            for (int i = 0; i < fshape.Count(); i = i + 2)
+            for (int i = 0; i < inter.Shape.Count(); i++)
             {
-                verts[vc] = new Vector3(fshape[i], 0.1f, fshape[i + 1]);
-                vc++;
+                CodingConnected.TraCI.NET.Types.Position2D pos = inter.Shape.ElementAt(i);
+                verts[i] = new Vector3((float)pos.X, 0.01f, (float)pos.Y);
             }
-            verts[verts.Length - 1] = new Vector3(centerpoint.x, 0.1f, centerpoint.y);
+
+            // Center of junction
+            verts[verts.Length - 1] = new Vector3(inter.X, 0.01f, inter.Y);
             mesh.vertices = verts;
 
             // Build Triangles
@@ -132,16 +110,13 @@ public class Junction : MonoBehaviour
             Vector3[] norms = new Vector3[numverts + 1];
             for (int k = 0; k < numverts + 1; k++)
             {
-                norms[k] = -Vector3.up;
+                norms[k] = Vector3.up;
             }
             mesh.normals = norms;
 
             chunk.AddComponent<MeshFilter>().mesh = mesh;
-            //chunk.transform.Translate(new Vector3(-1.5f, 0.0f, 0.0f), Space.Self);
-            chunk.isStatic = true;
-
+            //chunk.isStatic = true;
             chunk.transform.parent = Junctions_GO.transform;
-            
         }
     }
 

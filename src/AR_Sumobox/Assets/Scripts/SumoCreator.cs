@@ -69,156 +69,78 @@ public class SumoCreator : MonoBehaviour
     private void BuildNetwork(string file)
     {
         Main_Camera.GetComponentInChildren<Canvas>().gameObject.SetActive(false);
-        bool opened = true;
-        XmlDocument xmlDoc = new XmlDocument();
-        try
-        {
-            xmlDoc.Load(file);
-        }
-        catch (Exception e)
-        {
-            opened = false;
-            UnityEngine.Debug.LogException(e);
-        }
-        if (opened)
+
+        TraCIClient theclient = Traci_GO.GetComponent<TraciController>().Client;
+        if (theclient != null)
         {
             // Get the network size information from the 'location' 
             // node and build the terrain.
-            Projection_Data_GO.GetComponent<ProjectionData>().SetProjectionData(xmlDoc);
+            TraCIResponse<CodingConnected.TraCI.NET.Types.Polygon> bounds_xy = theclient.Simulation.GetNetBoundary(file);
+            Projection_Data_GO.GetComponent<ProjectionData>().originalBounds = bounds_xy.Content;
             Projection_Data_GO.GetComponent<ProjectionData>().BuildTerrain();
 
             // Get all the Junction/Intersection information from the 'junction' 
             // nodes and build the Junctions.
-            XmlNodeList junctions = xmlDoc.DocumentElement.SelectNodes("junction");
-            XmlNodeList junctions2 = xmlDoc.SelectNodes("junction");
-
-            foreach (XmlNode junction in junctions)
+            TraCIResponse<List<String>> junction_ids = theclient.Junction.GetIdList();
+            foreach (String j_id in junction_ids.Content)
             {
+                theclient.Junction.GetShape(j_id);
                 Intersection theJunction = new Intersection();
-                UnityEngine.Debug.Log(junctions.Count.ToString());
-                if (junction.Attributes["id"] != null)
-                {
-                    theJunction.Id = junction.Attributes.GetNamedItem("id").Value;
-                }
-                if (junction.Attributes["name"] != null)
-                {
-                    theJunction.Name = junction.Attributes.GetNamedItem("name").Value;
-                }
-                if (junction.Attributes["type"] != null)
-                {
-                    theJunction.Type = junction.Attributes.GetNamedItem("type").Value;
-                }
-                else
-                {
-                    theJunction.Type = "normal";
-                }
-                if (junction.Attributes["x"] != null)
-                {
-                    theJunction.X = junction.Attributes.GetNamedItem("x").Value;
-                }
-                if (junction.Attributes["y"] != null)
-                {
-                    theJunction.Y = junction.Attributes.GetNamedItem("y").Value;
-                }
-                if (junction.Attributes["shape"] != null)
-                {
-                    theJunction.Shape = junction.Attributes.GetNamedItem("shape").Value;
-                }
+                theJunction.Id = j_id;
+                theJunction.Name = j_id;
+                theJunction.Type = j_id;
+                theJunction.X = (float)theclient.Junction.GetPosition(j_id).Content.X;
+                theJunction.Y = (float)theclient.Junction.GetPosition(j_id).Content.Y;
+                theJunction.Shape = theclient.Junction.GetShape(j_id).Content.Points;
                 Junctions_GO.GetComponent<Junction>().Junction_List.Add(theJunction);
             }
-            var ids = Junctions_GO.GetComponent<Junction>().Junction_List.Select(j => j.Id);
-            var types = Junctions_GO.GetComponent<Junction>().Junction_List.Select(j => j.Type);
             Junctions_GO.GetComponent<Junction>().Build();
 
             // Get all the Edge/Road information from the 'edge' nodes.
             // Then build the Roads.
-            XmlNodeList edges = xmlDoc.DocumentElement.SelectNodes("edge");
-            foreach (XmlNode edge in edges)
+            TraCIResponse<List<String>> edge_ids = theclient.Edge.GetIdList();
+            foreach (string e_id in edge_ids.Content)
             {
                 // Create the Road and add the Edges Attributes.
                 // An Id will always be present but need to check the rest.
                 Road newEdge = new Road();
                 newEdge.Built = false;
-                newEdge.Id = edge.Attributes.GetNamedItem("id").Value;
-                if (edge.Attributes["name"] != null)
-                {
-                    newEdge.Name = edge.Attributes.GetNamedItem("name").Value;
-                }
-                if (edge.Attributes["from"] != null)
-                {
-                    newEdge.From = edge.Attributes.GetNamedItem("from").Value;
-                }
-                if (edge.Attributes["to"] != null)
-                {
-                    newEdge.To = edge.Attributes.GetNamedItem("to").Value;
-                }
-                if (edge.Attributes["type"] != null)
-                {
-                    newEdge.Type = edge.Attributes.GetNamedItem("type").Value;
-                }
-                if (edge.Attributes["shape"] != null)
-                {
-                    newEdge.Shape = edge.Attributes.GetNamedItem("shape").Value;
-                }
-                if (edge.Attributes["function"] != null)
-                {
-                    newEdge.Function = edge.Attributes.GetNamedItem("function").Value;
-                }
-                else
-                {
-                    newEdge.Function = "normal";
-                }
-
-                // Get all the Lanes that belong to the current Edge. 
-                newEdge.Lanes = new List<Lane>();
-                XmlNodeList lanes = edge.ChildNodes;
-                foreach (XmlNode lane in lanes)
-                {
-                    // Create a new Lane and add the Lanes Attributes.
-                    // Then save the Lane in the Road.Lanes list.
-                    Lane theLane = new Lane();
-                    theLane.Built = false;
-                    if (lane.Attributes["id"] != null)
-                    {
-                        theLane.Id = lane.Attributes.GetNamedItem("id").Value;
-                    }
-                    if (lane.Attributes["width"] != null)
-                    {
-                        theLane.Width = lane.Attributes.GetNamedItem("width").Value;
-                    }
-                    if (lane.Attributes["index"] != null)
-                    {
-                        theLane.Index = lane.Attributes.GetNamedItem("index").Value;
-                    }
-                    if (lane.Attributes["speed"] != null)
-                    {
-                        theLane.Speed = lane.Attributes.GetNamedItem("speed").Value;
-                        theLane.DefaultSpeed = theLane.Speed;
-                    }
-                    if (lane.Attributes["length"] != null)
-                    {
-                        theLane.Length = lane.Attributes.GetNamedItem("length").Value;
-                    }
-                    if (lane.Attributes["allow"] != null)
-                    {
-                        theLane.Allow = lane.Attributes.GetNamedItem("allow").Value;
-                    }
-                    if (lane.Attributes["disallow"] != null)
-                    {
-                        theLane.Disallow = lane.Attributes.GetNamedItem("disallow").Value;
-                    }
-                    if (lane.Attributes["shape"] != null)
-                    {
-                        theLane.Shape = lane.Attributes.GetNamedItem("shape").Value;
-                    }
-                    newEdge.Lanes.Add(theLane);
-                }
+                newEdge.Id = e_id;
+                newEdge.Name = theclient.Edge.GetStreetName(e_id).Content;
+                newEdge.From = null;
+                newEdge.To = null;
+                newEdge.Type = null;
+                newEdge.Shape = null;
+                newEdge.Function = null;
                 Edges_GO.GetComponent<Edge>().RoadList.Add(newEdge);
+            }
+
+            // Get all the Lanes that belong to the current Edge.
+            TraCIResponse<List<String>> lane_ids = theclient.Lane.GetIdList(); 
+            foreach (string l_id in lane_ids.Content)
+            {
+                // Create a new Lane and add the Lanes Attributes.
+                // Then save the Lane in the Road.Lanes list.
+                Lane newLane = new Lane();
+                newLane.Built = false;
+                newLane.Id = l_id;
+                newLane.Edge_Id = theclient.Lane.GetEdgeId(l_id).Content;
+                newLane.Width = (float)theclient.Lane.GetWidth(l_id).Content;
+                newLane.Index = "None";
+                newLane.Speed = (float)theclient.Lane.GetMaxSpeed(l_id).Content;
+                newLane.DefaultSpeed = newLane.Speed;
+                newLane.Length = (float)theclient.Lane.GetLength(l_id).Content;
+                newLane.Allow = theclient.Lane.GetAllowed(l_id).Content;
+                newLane.Disallow = theclient.Lane.GetDisallowed(l_id).Content;
+                newLane.Shape = theclient.Lane.GetShape(l_id).Content.Points;
+                Edges_GO.GetComponent<Edge>().LaneList.Add(newLane);
             }
             // Let the Edge script build all the Networks Roads/Edges.
             // This can be a very time consuming function given a large network.
             Edges_GO.GetComponent<Edge>().BuildEdges();
-        }        
+            
+
+        }       
     }
 
     /// <summary>
@@ -227,41 +149,22 @@ public class SumoCreator : MonoBehaviour
     /// <param name="file">The name of the SUMO .net file to parse given as a string.</param>
     private void BuildStructures(string file)
     {
-        // Open the file
-        bool opened = true;
-        XmlDocument xmlDoc = new XmlDocument();
-        try
+        TraCIClient theclient = Traci_GO.GetComponent<TraciController>().Client;
+        if (theclient != null)
         {
-            xmlDoc.Load(file);
-        }
-        catch (Exception e)
-        {
-            opened = false;
-            UnityEngine.Debug.LogException(e);
-        }
-        if (opened)
-        {
-            XmlNodeList polys = xmlDoc.DocumentElement.SelectNodes("poly");
-            foreach (XmlNode poly in polys)
+            List<string> id_list = theclient.POI.GetIdList().Content;
+
+            foreach(string p_id in id_list)
             {
                 Poly newpoly = new Poly();
-                newpoly.Id = poly.Attributes.GetNamedItem("id").Value;
-                if (poly.Attributes["color"] != null)
-                {
-                    newpoly.Color = poly.Attributes.GetNamedItem("color").Value;
-                }
-                if (poly.Attributes["type"] != null)
-                {
-                    newpoly.Type = poly.Attributes.GetNamedItem("type").Value;
-                }
-                if (poly.Attributes["shape"] != null)
-                {
-                    newpoly.Shape = poly.Attributes.GetNamedItem("shape").Value;
-                }
+                newpoly.Id = p_id;
+                newpoly.Color = new Vector3(theclient.POI.GetColor(p_id).Content.R, theclient.POI.GetColor(p_id).Content.G, theclient.POI.GetColor(p_id).Content.B);
+                newpoly.Type = theclient.POI.GetType(p_id).Content;
+                newpoly.Shape = theclient.Polygon.GetShape(p_id).Content.Points;
                 Structures_GO.GetComponent<Structure>().Polys.Add(newpoly);
             }
-            Structures_GO.GetComponent<Structure>().Build();
         }
+        Structures_GO.GetComponent<Structure>().Build();
     }
 
     /// <summary>

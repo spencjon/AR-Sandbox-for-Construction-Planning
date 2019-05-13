@@ -16,8 +16,8 @@ public struct Poly
 {
     public string Id { get; set; }
     public string Type { get; set; }
-    public string Color { get; set; }
-    public string Shape { get; set; }
+    public Vector3 Color { get; set; }
+    public List<CodingConnected.TraCI.NET.Types.Position2D> Shape { get; set; }
 }
 
 /// <summary>
@@ -52,26 +52,6 @@ public class Structure : MonoBehaviour
     public void ClearData()
     {
         Polys.Clear();
-    }
-
-    /// <summary>
-    /// Sumo shape sting to List of floats 
-    /// </summary>
-    /// <param name="shape"></param>
-    /// <returns>A list of floats, point order is x1, y1, x2, y2, ....</returns>
-    private List<float> ShapeStringToFloatList(string shape)
-    {
-        List<float> points = new List<float>();
-        char[] find = new char[2];
-        find[0] = ',';
-        find[1] = ' ';
-        string[] cuts = shape.Split(find);
-        List<string> cutList = cuts.ToList();
-        foreach (string cut in cutList)
-        {
-            points.Add(float.Parse(cut, CultureInfo.InvariantCulture.NumberFormat));
-        }
-        return points;
     }
 
     // Start is called before the first frame update
@@ -116,43 +96,40 @@ public class Structure : MonoBehaviour
             else
             {
                 m = Resources.Load("Materials/Concrete_Material", typeof(Material)) as Material;
-                List<float> color;
                 if (p.Color != null)
                 {
-                    color = ShapeStringToFloatList(p.Color);
-                    m.color = new Color(color[0] / 255.0f, color[1] / 255.0f, color[2] / 255.0f, 1.0f);
+                    m.color = new Color(p.Color.x / 255.0f, p.Color.y / 255.0f, p.Color.z / 255.0f, 1.0f);
                 }
                 
             }
 
             mr.material = m;
-            List<float> pshape = ShapeStringToFloatList(p.Shape);
 
-            List<Vector2> vecs = new List<Vector2>();
-            for (int i = 0; i < pshape.Count-2; i+=2)
+            List<Vector2> pshape = new List<Vector2>();
+            foreach (CodingConnected.TraCI.NET.Types.Position2D pos in p.Shape)
             {
-                vecs.Add(new Vector2(pshape[i],pshape[i+1]));
+                pshape.Add(new Vector3((float)pos.X,(float)pos.Y));
             }
 
-            Triangulator tr = new Triangulator(vecs.ToArray());
+            Triangulator tr = new Triangulator(pshape.ToArray());
             int[] indices = tr.Triangulate();
 
-            Vector3[] verts = new Vector3[vecs.Count];
-            for (int j = 0; j < vecs.Count; j++)
+            Vector3[] verts = new Vector3[pshape.Count];
+            for (int j = 0; j < pshape.Count; j++)
             {
                 if (building)
                 {
-                    verts[j] = new Vector3(vecs[j].x, 0.11f, vecs[j].y);
+                    verts[j] = new Vector3(pshape[j].x, 0.11f, pshape[j].y);
                 }
                 else
                 {
-                    verts[j] = new Vector3(vecs[j].x, 0.09f, vecs[j].y);
+                    verts[j] = new Vector3(pshape[j].x, 0.09f, pshape[j].y);
                 }
                 
             }
 
-            Vector3[] norms = new Vector3[vecs.Count];
-            for (int k = 0; k < vecs.Count; k++)
+            Vector3[] norms = new Vector3[pshape.Count];
+            for (int k = 0; k < pshape.Count; k++)
             {
                 norms[k] = Vector3.up;
             }

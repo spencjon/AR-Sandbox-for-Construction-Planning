@@ -32,23 +32,11 @@ public class ProjectionData : MonoBehaviour
     /// <summary>
     /// The networks original bounds Lat/Lon
     /// </summary>
-    public string originalBounds;
+    public CodingConnected.TraCI.NET.Types.Polygon originalBounds;
     /// <summary>
     /// The networks projected bound. Cartesian
     /// </summary>
-    public string projectedBounds;
-
-    /// <summary>
-    /// Get the bounds of the current network as a pair of points in 2-Space
-    /// </summary>
-    /// <param name="xml"> The xml file with the projection data.</param>
-    public void SetProjectionData(XmlDocument xml)
-    {
-        XmlNode location = xml.DocumentElement.SelectSingleNode("location");
-        offset = location.Attributes.GetNamedItem("netOffset").Value;
-        originalBounds = location.Attributes.GetNamedItem("origBoundary").Value;
-        projectedBounds = location.Attributes.GetNamedItem("convBoundary").Value;
-    }
+    public CodingConnected.TraCI.NET.Types.Polygon projectedBounds;
 
     /// <summary>
     /// Sumo shape sting to List of floats point order is x1, y1, x2, y2, ....
@@ -76,9 +64,8 @@ public class ProjectionData : MonoBehaviour
     /// </summary>
     public void BuildTerrain()
     {
-        List<float> bp = ShapeStringToFloatList(projectedBounds);
-        float x = bp[2] - bp[0];
-        float y = bp[3] - bp[1];
+        float x = (float)originalBounds.Points[1].X - (float)originalBounds.Points[0].X;
+        float y = (float)originalBounds.Points[1].Y - (float)originalBounds.Points[0].Y;
         //float z = 1.0f;
         GameObject chunk = new GameObject()
         {
@@ -115,8 +102,10 @@ public class ProjectionData : MonoBehaviour
         chunk.AddComponent<MeshFilter>().mesh = mesh;
         chunk.isStatic = true;
         chunk.transform.parent = Projection_Data_GO.transform;
-        float xcenter = (bp[0] + bp[2]) / 2.0f;
-        float ycenter = (bp[1] + bp[3]) / 2.0f;
+        float xcenter = ((float)originalBounds.Points[1].X + (float)originalBounds.Points[0].X) / 2.0f;
+        float ycenter = ((float)originalBounds.Points[1].Y - (float)originalBounds.Points[0].Y) / 2.0f;
+
+        // Adjust Camera
         Main_Camera.transform.position = new Vector3(xcenter, 50.0f, ycenter);
         Main_Camera.nearClipPlane = 0.01f;
         Main_Camera.farClipPlane = 1000000.0f;
