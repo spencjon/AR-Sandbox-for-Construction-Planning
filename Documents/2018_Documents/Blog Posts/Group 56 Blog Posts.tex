@@ -1,0 +1,295 @@
+\documentclass[letterpaper, 10pt, onecolumn, draftclsnofoot]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{enumerate}
+\lstset{breaklines=true}
+\geometry{margin=0.75in}
+\usepackage{setspace}
+\singlespacing
+\usepackage{section}[placeins]
+\usepackage{url}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\titlelabel{\thetitle.\quad}
+\usepackage{cite}
+\usepackage{tabu}
+\graphicspath{{./}}
+\usepackage{booktabs}% http://ctan.org/pkg/booktabs
+\newcommand{\tabitem}{\textbullet~~}
+\usepackage{pdfpages}
+\usepackage[parfill]{parskip}
+\usepackage{hyperref}
+\usepackage{longtable}
+
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\arabic{section}.\arabic{subsection}}
+\renewcommand\thesubsubsection{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+
+% TITLE / AUTHOR DATA
+\title{\Large{\textbf{Weekly Blog Posts}\\}}
+                      
+\author{Team Augmented Construction Education \\
+       McKenzie~Gray,~Jonah~Spencer,~Adam~Sunderman}
+
+\begin{document}
+%-------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------
+% SECTION TITLE
+\maketitle
+
+\newpage
+%-------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------
+% SECTION TOC
+\tableofcontents
+\clearpage
+\newpage
+%-------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------
+
+
+%-------------------------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------------------------------    
+% SECTION Blog Posts
+\section{Weekly Blog Posts}
+    \subsection{McKenzie Gray}
+        \begin{center}
+        \large{\textbf{Fall Blogs}} \\
+        \begin{longtable}{|p{4cm}|p{10cm}|}
+            \hline
+            Week 4 & \textbf{Progress:} This week, our group completed a compilation draft of our Problem Statement. We had Dr. Louis take a look at it and used his input to formulate a final draft. Jonah also found an API called SUMO that we might be able to use as a backend for traffic simulations. We should be able to communicate with it using Unity and it seems like a fairly promising tool.
+            \textbf{Problems:} Our biggest blocker right now is that we don't have physical access to the sandbox. Dr. Louis is working on getting us a space to put it, but he was travelling for about a week, so no real progress has been made.
+            \textbf{Plans:} Next week, we will be working on the Requirements document and hopefully we will find a space for the sandbox. From there, we will probably work on integrating SUMO into the current system. We have also set up a regular meeting time with Dr. Louis and we will probably be meeting weekly from now on.\\
+            \hline
+            Week 5 & \textbf{Progress:} Dr. Louis was able to find us a location to put the sandbox. We took it from his office on Thursday and moved it to its new location at Covell.
+            \textbf{Problems:} We don't have keys to the room yet, but Dr. Louis says he will get keys for us as soon as he can. We also met a professor whose office is nearby; he says he can give us access for the time being.
+            \textbf{Plans:} Over the next week, we will be working on the requirements and tech review documents. Regarding the latter, we have already decided who will be researching what.\\
+            \hline
+            Week 6 & \textbf{Progress:} This week, our group completed the first draft of our requirements doc and we will be finishing our tech reviews today. My tech reviews are for the game engine we will use to run the program, the technology we will use to drive the AR aspect of the project, and the physical markers we will use to interact with it. We also received keys to the room where our sandbox is located, so we can get in and work on it whenever we want.
+            \textbf{Problems:} Dr. Louis really wants us to start diving into development. As much as I would love to start playing with the system, I've been pretty swamped the last few weeks with work, documentation, and other school work, so that may be a challenge.
+            \textbf{Plans:} I believe we will begin working on the design document next week. I don't know how long that will take, but hopefully we will have some time left over to begin the first steps in development. Documentation has been eating up most of our time the last few weeks, but I would like to at least start playing with it next week if we/I have time.\\
+            \hline
+            Week 7 & \textbf{Progress:} Dr. Louis asked us to compile a list of parts we need for the sandbox. Most of what we're doing is software-based, but there are some minor adjustments to the physical setup. Specifically, we'll be moving the PC to the underside of the chassis and moving the projector to be closer to the Kinect. For that, we'll need a longer HDMI cable and some type of mount for the projector. Adam has a GoPro mount that seems like it'll work, so the only thing we need from Dr. Louis is the cable.
+            \textbf{Problems:} We discovered earlier this week that the keys we were given were for the wrong room - the one adjacent to the room that the sandbox is actually in. Adam got a new key already, and I will try to do the same later today.
+            \textbf{Plans:} Next week, I think we will start working on the design document. If not, I would like to start looking through the existing project and maybe beginning development.\\
+            \hline
+            Week 8 & \textbf{Progress:} We've been working on mounting the projector in a slightly different location, a bit closer to the Kinect. We've come up with a few possible solutions, but we haven't made a decision yet.
+            \textbf{Plans:} We will begin working on the design document next week. I plan to start on it this weekend. We'll hopefully get the projector mount figured out as well.\\
+            \hline
+            Week 9 & \textbf{Progress:} This week, we started on the design document. We've also come up with a few ideas for projector mounts, but we haven't made a concrete decision yet.
+            \textbf{Plans:} Next week, we will finish with the design document and begin working on the final presentation. Hopefully we will figure out the projector mount as well.\\
+            \hline
+        \end{longtable}
+        \end{center}
+    
+        \begin{center}
+        \large{\textbf{Winter Blogs}} \\
+        \begin{longtable}{|p{4cm}|p{10cm}|}
+            \hline
+            Week 1 & \textbf{Progress:} Over the break, each of us did some research to kickstart the term. Adam and Jonah looked into SUMo and I messed around with Vuforia. We met with Dr. Louis on Thursday and he asked us to put together a schedule detailing what we plan to work on and when. We discussed this after the meeting but decided we should meet up for an extended time on Saturday to discuss further.
+            \textbf{Problems:} Over the break, I was able to create a test project using Vuforia which worked well on my laptop using the built-in webcam. Unfortunately, when I tried to transfer the project to the sandbox's PC, Vuforia stopped recognizing image targets. I think there is some disconnect between Vuforia (or Unity) and the Kinect. I'm sure we'll be able to figure out the issue, but it's a roadblock, at least for now.
+            \textbf{Plans:} We'll know more about our plans after Saturday, but my expectation is that we will split up and each work on different components, then try to join each of the components together later. If that's the case, my focus will be on Vuforia and marker integration.\\
+            \hline
+            Week 2 & \textbf{Progress:} This week we spent most of our time planning out the rest of the term. We set up several issues on GitHub to give us a better sense of what all needs to be done. The first important step is figuring out how to interface with SUMo from Unity. Adam figured out how to make it work and we were able to communicate with SUMo from Unity.
+            \textbf{Plans:} Next week, I think the goal is to get Vuforia working with the Kinect and begin running SUMo simulations from Unity. If we can get to that point, we'll be well on track.\\
+            \hline
+            Week 3 & \textbf{Progress:} I actually had an opportunity to work on the AR part of the project this week. I previously thought that Vuforia was having issues interfacing with the Kinect, but that doesn't seem to be the case. I was actually able to get Vuforia to track an image for a few seconds using the Kinect camera.
+            \textbf{Problems:} That being said, Vuforia seems to be having a serious problem tracking images from the Kinect. My hypothesis at this point is that the relatively low resolution of the Kinect camera is making it very difficult for Vuforia's CV to detect images. Also, we still haven't figured out the network issue that we were having last week, so interfacing with SuMO is still mostly on standby.
+            \textbf{Plans:} My plan for this week is to test out several different marker designs to figure out what Vuforia is able to track best on the low-resolution camera. I'm worried that we may end up needing to get a different camera, but I'm going to try to make it work with our current setup.\\
+            \hline
+            Week 4 & \textbf{Progress:} We discovered the cause of the networking issue we've been wrestling with. Apparently, network traffic is restricted except for ports 80 and 443. As long as we use one of those ports, it works (usually). We also have contour lines displayed in depth mode, which is one of the improvements on the existing project that Dr. Louis had asked for.
+            \textbf{Problems:} Image tracking is still an issue. The resolution of the Kinect still seems to be the root issue, but it really shouldn't be; the camera on the Kinect V2 has a 1080p resolution, but we're clearly not getting that resolution on the other end. I'm still going to try to make it work with the Kinect, but it may end up being a simpler solution to just use a secondary camera for image tracking.
+            \textbf{Plans:} I'm committed to getting image tracking working by the end of next week. In the meantime, hopefully Adam and Jonah can start to create some basic visualizations in Unity of the simulations that SuMO is running.\\
+            \hline
+            Week 5 & \textbf{Progress:} It looks like we're continuing to make progress on the SUMo front. I'm hopeful that we'll have traffic visualizations working before the end of the term.
+            \textbf{Problems:} Meanwhile, Vuforia is continuing to be uncooperative. I switched gears a bit this week (after again failing to solve the tracking issue) and put together a script that we will eventually be able to use for marker integration. In my testing, it isn't very consistent, but that may just be because of the poor tracking.
+            \textbf{Plans:} I might continue down this path for a bit and see how much I can accomplish using a camera other than the Kinect. If it pans out, I may just ask Dr. Louis for a new camera that we can use just for marker tracking. We'll see.\\
+            \hline
+            Week 6 & \textbf{Progress:} Adam brought in a different webcam to see how much of a difference it would make for image tracking. Like magic, Vuforia started tracking perfectly as soon as we started using the new camera. I'm still not 100\% sure what the problem was with the Kinect, but I think the best thing to do at this point is to get a separate webcam to use specifically for image tracking. I found a camera that I think will work well and requested that Dr. Louis buy it for us. I already suggested that we might need a new camera and he seemed receptive to the idea, so it shouldn't be a problem.
+            \textbf{Plans:} It seems like road networks are mostly working and, now that we have image tracking, it's only a matter of putting all of the pieces together. That will be our main task for these last few weeks.\\
+            \hline
+            Week 7 & \textbf{Progress:} We got a new webcam just for Vuforia and it works great. I made some improvements to the script I made last week, which should pretty much give it all the functionality it needs. I was able to test it at the sandbox with the new webcam and it works perfectly. As far as markers go at this point, the technology is all basically ready. It's just a matter of integrating it with the simulations.
+            \textbf{Problems:} Although we don't have an alpha built per se, we're finally at a point where all of the individual pieces are working and we don't have any major blockers. 
+            \textbf{Plans:} We need to figure out how we're going to make the markers themselves. At this point, I think that QR codes are the way to go, as they're the easiest for Vuforia to track. However, we need something rigid that we can print the QR codes on and use as markers. So far, I've just been using copy paper on a clipboard, but we'll want something more elegant for Expo.\\
+            \hline
+            Week 8 & \textbf{Problems:} I'm currently trying to figure out how it will work having Vuforia running through the webcam but the main scene running through the projector. I think I have it mostly figured out; I can have both of them running at the same time, but the marker script doesn't seem to be working properly.\textbf{Plans:} I'm really hoping to have everything mostly working at the end of the term so we can focus on polish and stretch goals next term. I don't know where Jonah is with simulations, though, so I don't know how likely that is.\\
+            \hline
+            Week 9 & 
+            \textbf{Progress:} I added a new UI element that indicates how many markers are currently being tracked by Vuforia. This is the only feedback we are currently getting regarding tracking status. I also decided to look into improving depth calibration after Dr. Louis expressed concern with how sensitive it is. I'm not especially happy with the fix that I implemented, but calibration is undeniably easier now.
+            \textbf{Problems:} I'm at a bit of a standstill with Vuforia at the moment. Top priority is being able to interact with simulations using markers, but we still don't have simulations to interact with. \\
+            \hline
+            Week 10 & \textbf{Progress:} I'm a bit blocked at the moment as I wait for Jonah to get simulations working. I think the only progress I personally made this week was creating a menu using virtual buttons. It would potentially replace the current menu used for switching modes. 
+            \textbf{Problems:} I noticed while testing it that the bright colors projecting onto the QR code was creating problems for the virtual buttons. They were still tracking well (surprisingly), but Vuforia was failing to detect when a button was being pressed.
+            \textbf{Plans:} Dr. Louis is giving a presentation next week and he would like us to record some demos of each mode of the sandbox. That won't be difficult since we will be recording footage anyway for the progress report for class. \\
+            \hline
+        \end{longtable}
+        \end{center}
+        
+        \begin{center}
+        \large{\textbf{Spring Blogs}} \\
+        \begin{longtable}{|p{4cm}|p{10cm}|}
+            \hline
+            Week 1 & \textbf{Progress:} As we left the project before the break, the work zone marker was not working exactly as it should. This was due to a combination of factors, but it essentially only worked in a single scenario to allow for recording a demo. This week, I resolved this and work zone markers are now working as they should. There are some minor issues still, but it's largely working well. \textbf{Plans:} My main goal for next week is to get traffic light \& stop sign markers implemented. It shouldn't be too difficult now that the core marker functionality is in place, and it's the last major feature that really needs to be added before the code freeze.\\
+            \hline
+            Week 2 & \textbf{Progress:} This week, I improved the work zone marker a little more, especially with how the change is displayed in the scene. I also mostly implemented a marker for changing a traffic light intersection into a stop sign intersection and vice versa. Jonah is working on making the simulation change depending on the state of the intersection. Once that's finished, the two main markers will be good to go.
+            \textbf{Plans:} There are still a few other relatively small changes to make before the code freeze. We will probably also need to update our requirements document in order to reflect what we haven't been able to get to.\\
+            \hline
+            Week 3 & \textbf{Progress:} We tried to get traffic light \& stop sign markers working before the code freeze, but we were unable to get it to work on the simulation side. The markers work, and they will update the scene visually, but the simulation will not change. After the code freeze, we made some revisions to our design \& requirements documents and got Dr. Louis to sign off on them.
+            \textbf{Problems:} I tried to fix the design mode exception only to discover that design mode is completely broken currently. We haven't touched that section of the project and we have no idea what the issue is.
+            \textbf{Plans:} We're moving on mostly to stretch goals now. I will mostly be working on expanding the use of virtual buttons.\\
+            \hline
+            Week 4 & \textbf{Progress:} This week, we mostly focused on finishing our poster. We tried to get mesoscopic view working as well but it's giving us difficulty. 
+            \textbf{Plans:} After this, we'll be solely focused on getting ready for expo.\\
+            \hline
+            Week 5 & \textbf{Progress:} Mesoscopic view is (mostly) working now. There are still a couple of issues, but they shouldn't be too difficult to fix. We also added models for vehicles. 
+            \textbf{Problems:} Design mode is still broken and we have no idea what the problem is. We also tried running a simulation with 100-some vehicles and it was chugging really badly. Jonah claims that this wasn't always a problem, but we're not exactly sure what is causing it. \\
+            \hline
+            Week 6 & \textbf{Progress:} I've been swamped this week and haven't had time to work on the project. We have a list of items to try to get done before expo but I only realistically expect us to get maybe half of them finished. \\
+            \hline
+        \end{longtable}
+        \end{center}
+    
+    \subsection{Jonah Spencer}
+        \begin{center}
+        \large{\textbf{Fall Blogs}} \\
+        \begin{longtable}{|p{4cm}|p{10cm}|}
+            \hline
+            Week 4 & \textbf{Progress: } This week, we completed a draft of the problem statement. I started looking into the SUMO "Simulation of Urban Mobility" software.\textbf{Problems: } Currently, we don't have a place to store the sandbox, so we cannot run or develop on the sandbox.  \textbf{Plans: } We plan on getting a spot for the sandbox and work on getting SUMO in the project.\\
+            \hline
+            Week 5 & \textbf{Progress: } This week we got the AR Sandbox in a room, figured out all each of us will start focusing on, and I have figured out how to set up the sandbox for myself. \textbf{Problems:}  Our next problem is getting a key to the room.  \textbf{Plans: } Our plan for the following week is to get each of our assignments done and get proficient in running the current system.\\
+            \hline
+            Week 6 & \textbf{Progress: } We finished the first draft for the requirements document. As well, we got keys for the office. \textbf{Problems: } The sandbox project is a bit of a hodgepodge when it comes to the code. We are working to understand how various parts work.\\
+            \hline
+            Week 7 & \textbf{Progress: }  A list of parts has been compiled -- the current projector is still fine for the use case; however, we are looking into an expensive projector that can project even in direct sunlight. \textbf{Problems:}  We were given the wrong keys for the sandbox room. \textbf{Plans: } We plan on getting the correct keys. \\
+            \hline
+            Week 8 & \textbf{Progress: } We've setup the sandbox in Covell and altered the projector mounting. \textbf{Plans: } We are going to work on the design document next week.\\
+            \hline
+            Week 9 & \textbf{Progress: } We started on the design document. \textbf{Plans: } We will finish the design document this coming week.\\
+            \hline
+        \end{longtable}
+        \end{center}
+    
+        \begin{center}
+        \large{\textbf{Winter Blogs}} \\
+        \begin{longtable}{|p{4cm}|p{10cm}|}
+            \hline
+            Week 1 & \textbf{Progress:} During the first week, we met with each other and the professor to get going \textbf{Plans:} We are planning on getting back to developing after the break.\\
+            \hline
+            Week 2 & \textbf{Progress:} Durring the second week, I worked on documentation and various UI bugs.
+            \textbf{Problems:} I have been waiting on some information from a dev that works with SUMO who I reached out to \textbf{Plans:} My plan is to continue working on UI and usability fixes\\
+            \hline
+            Week 3 & \textbf{Progress:} I'm still talking with the SUMO dev who was interested in the project. \textbf{Problems:} The subscription model is not working for getting cars' positions currently. \textbf{Plans:} I may have to look into fixing the TraCi library in c\# to work with Unity.\\
+            \hline
+            Week 4 & \textbf{Progress:} This week, I worked on some various SUMO applications to get the simulation running \textbf{Problems:} The main problem is that Adam and myself have two potential fixes for what I'm working on, so I'm not sure what way we'll go. \textbf{Plans:} My plan was to continue working on code spikes until we figure it out.\\
+            \hline
+            Week 5 & \textbf{Progress:} I continued working on my code spike working with a different way to do the simulation \textbf{Problems:} My code spike is not looking promising. \textbf{Plans:} I plan to keep chugging along.\\
+            \hline
+            Week 6 & \textbf{Progress:} Week 6 I worked with Mckenzie on the camera issues and tried a few solution on my own time. \textbf{Problems:} None of them worked. \textbf{Plans:} I plan to continue working with him on the issue.\\
+            \hline
+            Week 7 & \textbf{Progress:} We mainly worked on the poster. \textbf{Plans:} I plan to work on more documentation in the next week. \\
+            \hline
+            Week 8 & \textbf{Progress:} I worked on the progress report and the simulation \textbf{Problems:} I have an unreliable version working, but Unity is being a pain as always \textbf{Plans:} I plan to get the alpha version of the SUMO part out and integrated asap \\
+            \hline
+            Week 9 & \textbf{Progress:} This week, I'm mainly debugging the online Traci - c\# implementation for our project. Along with that, I am debugging Unity to get it to load references as well as trying to get async calls to work.  \textbf{Problems:} The dev who worked on TraCi/SUMO wasn't sure what was going on with the subscriptions. \textbf{Plans:} I am going to move away from the subscription model in order to get a working version out. \\
+            \hline
+            Week 10 & \textbf{Progress:} This week, I'm finishing an alpha of the Traci integration.  \textbf{Problems:} integrating everyone's versions has been difficult as UNITY and github do not integrate well. \\
+            \hline
+        \end{longtable}
+        \end{center}
+        
+        \begin{center}
+        \large{\textbf{Spring Blogs}} \\
+        \begin{longtable}{|p{4cm}|p{10cm}|}
+            \hline
+            Week 1 & \textbf{Progress:} This week, I am working on SUMO improvements. There has been an issue with road sections being too large for our client. SUMO is rejecting most attempts, and the only built-in way to make this is to use the NETEDIT GUI. \textbf{Plans:} I am looking into building a CLI to do similar edits.\\
+            \hline
+            Week 2 & \textbf{Progress:} I worked on the work-zone spliter; however, there are seemingly endless calculations the NETEDIT GUI does when splitting a road that effect the entire network. \\
+            \hline
+            Week 3 & \textbf{Progress:} We finished the last elements for the code freeze. \textbf{Problems:} Part of the application temporarily stopped working after adding Vueforia integration. (A bad merge may be to blame) \\
+            \hline
+            Week 4 & \textbf{Progress:} We got farther on the Beta version and got another draft of the poster done. \textbf{Plans: } We will need to make many improvements and alterations to both in the next week. \\
+            \hline
+            Week 5 & \textbf{Progress:} We completed the poster with major alterations, talked with our client, and made some improvements to the sandbox \\
+            \hline
+            Week 6 & \textbf{Progress:} I finished some minor improvements to performance and am not confident the road splitter will be done in time for the demo. \textbf{Problems:} The road splitting function is much more complex than I had believed. \textbf{Plans:} I will look at creating a c++ CLI for the NETEDIT GUI as SUMO is open sourced. \\
+            \hline
+        \end{longtable}
+        \end{center}
+    
+    \subsection{Adam Sunderman}
+        \begin{center}
+        \large{\textbf{Fall Blogs}} \\
+        \begin{longtable}{|p{4cm}|p{10cm}|}
+            \hline
+            Week 4 & \textbf{Progress:} We had a second meeting with our client (Dr. Joseph Louis) and met our TA. We have weekly meetings scheduled with both. The problem statement is written and turned in, our team all had the same general ideas so combining them was somewhat simple. We also created several detailed user stories with the client which will be expanded on for later project documents. \textbf{Problems:} Our biggest challenge at the moment is the fact that we still have nowhere to work. We have a large project that requires space to use at setup. At this point we haven't tested the AR Sandbox upon which our project will be built. \textbf{Plans:} We have another meeting with the client next week at which point he should have a place for us to work. If he finds one before he will advise us. For now we can stay busy since have some technologies to research for use in our project. \\
+            \hline
+            Week 5 & \textbf{Progress:} We've just been working on the requirements document and a little work on the tech review. We had another meeting with our client and finalized our requirements with him (Ask far as what he needs to happen). We also moved the AR Sandbox to Covell where we should be able to work from for the year. I went in today and turned the AR Sandbox on and did some calibration to make sure everything was still in order after the move. \textbf{Problems:} We still need to get in and get some time with the AR Sandbox before we finish the requirements document section on the improvements to previous work. But this isn't a major problem and will probably happen Monday. We also still need a key to our work space but this will be provided to us later. \textbf{Plans:} Go spend a little time using the AR Sandbox as a team early this week then finish up the requirements document with what we observe. Meeting with our TA Moday, 2pm. Meeting with client Thursday 4pm.  \\
+            \hline
+            Week 6 & \textbf{Progress:} Things are going really good. The teams still been getting along good, no issues at all. We finally got keys to the room that we'll be working in for the year. This means that we'll probably start spending a lot of time down there diving in to some of the adjustments and correction we need to make to the AR Sandbox. Dr. Louis mentioned wanting to show off the box to someone at some point soon so maybe I might even go in this weekend. For now that and the design document is going to be the major focus for me (and presumably the team). \\
+            \hline
+            Week 7 & \textbf{Progress:} The AR Sandbox is setup in Covell now and we have keys to access it any time we need. Over the week I have been putting together a shopping list with Dr. Louis so we can permanently mount the camera and projector. Last night I took the projector home, opened it up and fixed the mounting screw and attached a GoPro mount. Today I put the projector back with the box to wait for the parts that will be here early next week attaching. \textbf{Plans:} Early next week Dr. Louis is going to email me when he has the parts. When he does I'll bring some tools from home and we will spend a couple hours getting everything permanently mounted. Also next week we need to find and replace the sand in the box with something less glassy. After replacing the sand, mounting the camera and projector, and moving the computer under the sandbox all the small stuff will be done and we can focus the last two weeks purely on code. \\
+            \hline
+            Week 8 & \textbf{Progress:} This week we had another meeting with the client and got some materials from him for re-mounting our projector and depth sensor. Not much else really happened this week. \textbf{Plans:} Early next week were going to get together as a group and mount the parts. After were done we will have some calibration to do so we can setup the AR Sandbox for use while were are in development of the new features. We plan to build a version of the app (in its current state in Unity) which will be titled 'AR Sandbox 2017 Stable'. Our development over the year will produce 'AR Sandbox 2018 Stable'. We'll also use this time as an opportunity to refine our design document and any oversights we may be missing at this point. \\
+            \hline
+            Week 9 & \textbf{Progress:} We made a good rough draft outline of the design document this week which will make it easy to finish the doc over the break and early next week. \textbf{Plans:} Continue to work on the design document and the rest of the end-of-term papers. \\
+            \hline
+        \end{longtable}
+        \end{center}
+        
+        \begin{center}
+        \large{\textbf{Winter Blogs}} \\
+        \begin{longtable}{|p{4cm}|p{10cm}|}
+            \hline
+            Week 1 & \textbf{Progress:} Over the break we all played around in various ways with the tools we'll be using this term. This week was a perfect time for us all to get together and show/talk about our ideas and what we've learned at this point before moving forward. We had our first client meeting this week to make sure everyone is still on the same page with the direction of the project. We did the same as a group without the client as well to talk about some of the more technical aspects of the project. \textbf{Plans:} Our plan is to focus on the first part of our project which will be a Open Street Map road network importer for Unity. This will effectively create for us a 'base' 3D scene on which simulations can be visualized and create the special 'XML' files needed by SUMO to define the network as sets of nodes. We plan to meet several times each week over the term. Our next meeting is Saturday 10:30.\\
+            \hline
+            Week 2 & \textbf{Progress:} Elevator pitch has been completed, expo poster draft has been started and is looking good. The project code is moving but slowly at this point. \textbf{Problems:} We are having some networking issues with our project, that have been discussed with several people already hopefully we will find a solution soon. \textbf{Plans:} Work on the networking issue and continue developing from home for now. \\
+            \hline
+            Week 3 & \textbf{Progress:} Not really much progress this week just some small code additions. \textbf{Problems:} We are still trying to get our networking figured out for our computer attached to the AR Sandbox. I finally was connected (sort of) with the head of Information Services so once he responds we should be able to move past the WebSocket issue. \textbf{Plans:} Get the networking figured out so we can begin coding the visuals for the traffic simulations. Once we can open web sockets and get open street map data our next big step is to design the visuals that make up our scenes in Unity. These will be the roads, buildings and urban decorative objects that the simulated traffic and pedestrians will maneuver through during a running simulation. \\
+            \hline
+            Week 4 & \textbf{Progress:} We got our networking issues figured out so now the AR Sandbox is usable from campus. We also scheduled our poster review with group 57 for Feb 6th. \textbf{Plans:} Continue coding the graphics for the project. Continue exploring options for Vuforia integration. Add more content and formatting to the poster before the review next week. \\
+            \hline
+            Week 5 & \textbf{Progress:} We have been making some progress getting polygons built for roads and scene objects, and with getting Vuforia working with our camera. \textbf{Plans:} Continue getting Vuforia and the simulation scene ready for a demo in two weeks. \\
+            \hline
+            Week 6 & \textbf{Progress:} We made some good progress this week. We were able to figure out our problems with Vuforia is because of our camera, so we can get a new one and move on. Also our road and landscape generator is now about 90 percent complete which means we can move on to our last large goal of actually running traffic simulations on the new scenes. \textbf{Plans:} Were behind on documentation at this point so we'll be focusing on that for a few days before continuing with our coding and design tasks on the project. \\
+            \hline
+            Week 7 & \textbf{Progress:} We are getting really close to having Vuforia integrated with our project and having all the scene objects built. \textbf{Plans:} Work on documentation that's due Monday while making a few upgrades to the current code to better display beta functionality. \\
+            \hline
+            Week 8 & \textbf{Progress:} We got a lot of our Vuforia issues solved and should soon have it at least partially integrated with the project by next week. \textbf{Problems:} Creating the polygons for the scene has still been a persistent issue. The look of the models still isn't quite what we need or expect. \textbf{Plans:} Explore using geometry shaders to help in the process of building our scene models. Get Vuforia integrated into the user interface. Create a presentation for our client that he can show to people with a stake (or special interest) in our project. The presentation will just demonstrate the features we have in place in order to give an idea of where the project is going. Also next week I will give an in-person demonstration to the client and a guest of the same material. \\
+            \hline
+            Week 9 & \textbf{Progress:} This week I did a presentation for our client and X. It was just a short demo of our work so far and some insight on our plans. This week I also wrote up all of the functionality still needed to create networks as psuedo-code. \textbf{Plans:} This weekend I'm going to write the code from my psuedo-code and then the networks and scenes should be complete minus small details like traffic lights, etc.... I'll also get an outline from the client this weekend that's an overview for a presentation he would like us to put together by next week. It will just be a short paper that describes what we've done, what it will do, and what it could potentially do with more work. I'll give that to him Monday so we can revise it if needed by Wednesday. \\
+            \hline
+            Week 10 & \textbf{Progress:} Were still just working on putting together some final demos. \textbf{Problems:} No problems though I think were a little behind. \textbf{Plans:} Major team coding sessions all weekend. \\
+            \hline
+        \end{longtable}
+        \end{center}
+        
+        \begin{center}
+        \large{\textbf{Spring Blogs}} \\
+        \begin{longtable}{|p{4cm}|p{10cm}|}
+            \hline
+            Week 1 & \textbf{Progress:} This week we are trying to get all the final touches finished up on the AR Sandbox. We had a meeting with the client to finalize expectations as we close out the project and we all seem to be on the same page as far as work completed and functionality. We will spend the next few days before code freeze fixing code before moving on to documentation. \\
+            \hline
+            Week 2 & \textbf{Progress:} No problems right now. Were just in crunch mode to get a couple things done before code freeze. It'll be a busy weekend but we'll get there. There's not really much else to report at the moment. \\
+            \hline
+            Week 3 & \textbf{Plans:} We'll start finishing the poster this weekend so we can get it ready for submission. Additionally, I have some 3D modeling and texture work to do, a shader to write and a some small script changes to implement. We're still just trying to do all the stretch goal and detail work that's gonna make our project really cool. \\
+            \hline
+            Week 4 & \textbf{Progress:} We just about have the poster done so we can submit tonight. \textbf{Problems:} Our client is out of town so we can't get feedback on the poster or him in a team photo until Monday. \textbf{Plans:} Get the poster done today and submit with one group photo to be replaced Monday. Continue to work on getting the project in the best shape we can for expo. \\
+            \hline
+            Week 5 & \textbf{Progress:} We're getting a lot of the details wrapped up for expo. Stuff like making models, making them look better with textures and materials, and fine tuning or main features to work as smooth as possible. \textbf{Plans:} We still have a little work to do before expo but we're at the finish line. After this weekend we should be just about ready. \\
+            \hline
+            Week 6 & \textbf{Progress:} The finish line. We still have a couple small things to get ready for expo but we're ready. At class today we all agreed to have our parts for these things done by next Wednesday which gives us plenty of cushion should we have any problems. I'm still slightly concerned with the logistics of moving our project to expo (we should start well before 9) and setting up in the space assigned (hopefully it's large enough for us and team 57), but I'm sure everything will get figured out.\\
+            \hline
+        \end{longtable}
+        \end{center}
+        \newpage
+
+\end{document}
