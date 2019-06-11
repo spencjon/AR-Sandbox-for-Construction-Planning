@@ -29,12 +29,14 @@ public class Junction : MonoBehaviour
     private GameObject Junctions_GO;
     public Shader Road_Shader;
     public List<Intersection> Junction_List;
+    public bool Built;
 
     // Start is called before the first frame update
     void Start()
     {
         Junction_List = new List<Intersection>();
         Junctions_GO = GameObject.Find("Junctions");
+        Built = false;
     }
 
     // Update is called once per frame
@@ -71,10 +73,10 @@ public class Junction : MonoBehaviour
     /// <summary>
     /// Build an Intersection.
     /// </summary>
-    public void BuildJunction(Intersection inter)
+    public void BuildJunction(Intersection inter, bool flat)
     {
         // String points to floats
-        if (inter.Shape == null || inter.Type == "internal")
+        if (inter.Shape == null)
         {
             return;
         }
@@ -91,10 +93,18 @@ public class Junction : MonoBehaviour
             // Get Meshfilter and create a new mesh
             GameObject chunk = new GameObject();
             chunk.name = inter.Id;
-
             
             chunk.AddComponent<MeshRenderer>();
-            Material m = new Material(Road_Shader);
+            Material m;
+            if (flat)
+            {
+                m = new Material(Resources.Load("Materials/Road_Material")as Material);
+            }
+            else
+            {
+                m = new Material(Road_Shader);
+            }
+            
             chunk.GetComponent<MeshRenderer>().material = m;
             Mesh mesh = new Mesh();
 
@@ -147,11 +157,10 @@ public class Junction : MonoBehaviour
     {
         foreach (Intersection i in Junction_List)
         {
-            if (i.Type == "traffic_light" || i.Type == "priority")
-            {
-                BuildJunction(i);
-            }
+            BuildJunction(i, true);
         }
+
+        Built = true;
     }
 }
 

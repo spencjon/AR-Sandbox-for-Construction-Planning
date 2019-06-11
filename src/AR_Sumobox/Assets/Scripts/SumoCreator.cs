@@ -38,6 +38,10 @@ public class SumoCreator : MonoBehaviour
     /// </summary>
     private GameObject Traci_GO;
     /// <summary>
+    /// TrafficLight Game object (Script)
+    /// </summary>
+    private GameObject TrafficLight_GO;
+    /// <summary>
     /// A handle to the main scene camera.
     /// </summary>
     private GameObject Main_Camera;
@@ -46,6 +50,8 @@ public class SumoCreator : MonoBehaviour
     /// The name of the current simulation configuration file.
     /// </summary>
     private string CFG_FILE = null;
+    private string NET_FILE = null;
+    private string POLY_FILE = null;
     /// <summary>
     /// Find all parent GameObjects at start.
     /// </summary>
@@ -57,6 +63,7 @@ public class SumoCreator : MonoBehaviour
         Structures_GO = GameObject.Find("Structures");
         Traci_GO = GameObject.Find("Traci_Controller");
         Main_Camera = GameObject.Find("Main_Camera");
+        TrafficLight_GO = GameObject.Find("TrafficLights");
     }
 
     /// <summary>
@@ -90,9 +97,12 @@ public class SumoCreator : MonoBehaviour
             // Get all the Junction/Intersection information from the 'junction' 
             // nodes and build the Junctions.
             XmlNodeList junctions = xmlDoc.DocumentElement.SelectNodes("junction");
+            XmlNodeList junctions2 = xmlDoc.SelectNodes("junction");
+
             foreach (XmlNode junction in junctions)
             {
                 Intersection theJunction = new Intersection();
+                UnityEngine.Debug.Log(junctions.Count.ToString());
                 if (junction.Attributes["id"] != null)
                 {
                     theJunction.Id = junction.Attributes.GetNamedItem("id").Value;
@@ -117,12 +127,18 @@ public class SumoCreator : MonoBehaviour
                 {
                     theJunction.Y = junction.Attributes.GetNamedItem("y").Value;
                 }
+                if (junction.Attributes["incLanes"] != null)
+                {
+                    theJunction.IncomingLanes = junction.Attributes.GetNamedItem("incLanes").Value;
+                }
                 if (junction.Attributes["shape"] != null)
                 {
                     theJunction.Shape = junction.Attributes.GetNamedItem("shape").Value;
                 }
                 Junctions_GO.GetComponent<Junction>().Junction_List.Add(theJunction);
             }
+            var ids = Junctions_GO.GetComponent<Junction>().Junction_List.Select(j => j.Id);
+            var types = Junctions_GO.GetComponent<Junction>().Junction_List.Select(j => j.Type);
             Junctions_GO.GetComponent<Junction>().Build();
 
             // Get all the Edge/Road information from the 'edge' nodes.
@@ -213,7 +229,7 @@ public class SumoCreator : MonoBehaviour
             // Let the Edge script build all the Networks Roads/Edges.
             // This can be a very time consuming function given a large network.
             Edges_GO.GetComponent<Edge>().BuildEdges();
-        }        
+        }
     }
 
     /// <summary>
@@ -266,7 +282,7 @@ public class SumoCreator : MonoBehaviour
     /// </summary>
     public void GenerateOsmNetwork()
     {
-        Main_Camera.GetComponentInChildren<Canvas>().gameObject.SetActive(false);
+        Main_Camera.GetComponentInChildren<Canvas>()?.gameObject?.SetActive(false);
         try
         {
             Process p = new Process();
@@ -320,12 +336,13 @@ public class SumoCreator : MonoBehaviour
                 // The network file.
                 else if (file.EndsWith(".net.xml"))
                 {
-                    BuildNetwork(file);
+                    NET_FILE = file;
+                    
                 }
                 // The polygon file.
                 else if (file.EndsWith(".poly.xml"))
                 {
-                    BuildStructures(file);
+                    POLY_FILE = file;   
                 }
                 // The view file.
                 else if (file.EndsWith(".view.xml"))
@@ -347,10 +364,18 @@ public class SumoCreator : MonoBehaviour
                     }
                 }
             }
-            UnityEngine.Debug.Assert(CFG_FILE != null, "No .sumocfg file created, something may have gone wrong with the osmWebWizard.py. Try using Python 2.X with unicode support");
+            //UnityEngine.Debug.Assert(CFG_FILE != null, "No .sumocfg file created, something may have gone wrong with the osmWebWizard.py. Try using Python 2.X with unicode support");
             if (CFG_FILE != null)
             {
                 StartSumo(CFG_FILE);
+            }
+            if (NET_FILE != null)
+            {
+                BuildNetwork(NET_FILE);
+            }
+            if (POLY_FILE != null)
+            {
+                BuildStructures(POLY_FILE);
             }
         }
     }
@@ -366,7 +391,7 @@ public class SumoCreator : MonoBehaviour
             Traci_GO.GetComponent<TraciController>().Port = 80;
             Traci_GO.GetComponent<TraciController>().HostName = Dns.GetHostEntry("localhost").AddressList[1].ToString();
             Traci_GO.GetComponent<TraciController>().ConfigFile = ConfigFile;
-            Traci_GO.GetComponent<TraciController>().Invoke("ConnectToSumo", 0);             
+            Traci_GO.GetComponent<TraciController>().Invoke("ConnectToSumo", 0.0f);             
         }
         catch (Exception e)
         {

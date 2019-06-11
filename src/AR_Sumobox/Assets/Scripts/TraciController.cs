@@ -42,7 +42,9 @@ public class TraciController : MonoBehaviour
     /// Flag to determine if the road color should be set
     /// </summary>
     public bool OccupancyVisual;
+    private bool VisualsSwitched;
 
+    private bool TrafficLightsLoaded;
     /// <summary>
     /// Flag to determine if car positions should be shown.
     /// </summary>
@@ -67,6 +69,8 @@ public class TraciController : MonoBehaviour
         Cars_GO = GameObject.Find("Cars");
         OccupancyVisual = false;
         CarVisual = true;
+        VisualsSwitched = false;
+        TrafficLightsLoaded = false;
     }
     
     /// <summary>
@@ -94,8 +98,7 @@ public class TraciController : MonoBehaviour
             await Client.ConnectAsync(HostName, Port);
             Subscribe();
             Client.Control.SimStep();
-            string trafficLightID = FindObjectOfType<Junction>().Junction_List.First(e => e.Type == "traffic_light").Id;
-            DefaultProgram = GetProgram(trafficLightID);
+            
             return Client;
         }
         catch(Exception e)
@@ -271,23 +274,35 @@ public class TraciController : MonoBehaviour
             UnityEngine.Debug.LogWarning("Lane: " + laneId + " Is already a construction zone");
         }
     }
+    
+
+    /// <summary>
+    /// Flips the Occupancy Visual to simulate a mesoscopic view.
+    /// </summary>
+    public void ToggleMesoscopic()
+    {
+        OccupancyVisual = !OccupancyVisual;
+        CarVisual = !CarVisual;
+        VisualsSwitched = true;
+    }
+
 
     /// <summary>
     /// Sets a junction's stop light to the "off-blinking" phase to cause all vehicles to yeild
     /// </summary>
-    /// <param name="juntionId">The id of the stop light/junction that will be converted</param>
-    public void SetStopSignJunction(string juntionId)
+    /// <param name="trafficLightId">The id of the stop light/junction that will be converted</param>
+    public void SetStopSignJunction(string trafficLightId)
     {
-        Client.TrafficLight.SetProgram(juntionId, "o");
+        Client.TrafficLight.SetProgram(trafficLightId, "o");
     }
 
     /// <summary>
     /// Sets a junction's stop light to the default phase to cause all vehicles to yeild
     /// </summary>
-    /// <param name="junctionId">The id of the stop light/junction that will be converted</param>
-    public void SetTrafficLightJunction(string junctionId)
+    /// <param name="trafficLightId">The id of the stop light/junction that will be converted</param>
+    public void SetTrafficLightJunction(string trafficLightId)
     {
-        Client.TrafficLight.SetProgram(junctionId, DefaultProgram);
+        Client.TrafficLight.SetProgram(trafficLightId, DefaultProgram);
     }
 
     /// <summary>
@@ -325,13 +340,6 @@ public class TraciController : MonoBehaviour
         {
             Cars_GO.transform.position = (Vector3)e.Responses.ToArray()[0];
         }
-        else
-        {
-            SphereCollider car = Cars_GO.AddComponent(typeof(SphereCollider)) as SphereCollider;
-            car.tag = e.ObjecId;
-            Traci.Types.Position3D pos = (Traci.Types.Position3D)e.Responses.ToArray()[0];
-            car.transform.position = new Vector3((float)pos.X, 0, (float)pos.Y);
-        }
     }
 
     /// <summary>
@@ -342,32 +350,187 @@ public class TraciController : MonoBehaviour
     {
         if (Client != null)
         {
+            if (!TrafficLightsLoaded)
+            {
+                GameObject.Find("TrafficLights").GetComponent<TrafficLight>().Get_Traffic_Lights();
+                TrafficLightsLoaded = true;
+            }
             if (OccupancyVisual)
             {
-                edge.RoadList.ForEach(e => {
-                    e.Occupancy = (float)Client.Edge.GetLastStepOccupancy(e.Id).Content;
-                });
+                if (VisualsSwitched)
+                {
+                    //GameObject.Find("Occupancy_Legend").SetActive(true);
+                    foreach (Transform child in Cars_GO.transform)
+                    {
+                        GameObject.Destroy(child.gameObject);
+                    }
+                    VisualsSwitched = false;
+                }
+
+                Transform e = GameObject.Find("Edges").transform;
+                if (e != null)
+                {
+                    foreach (Transform child in e)
+                    {
+                        float o = (float)Client.Lane.GetLastStepOccupancy(child.gameObject.name).Content;
+                        if (o >= 0.9f)
+                        {
+                            child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_7", typeof(Material)) as Material;
+                        }
+                        else if (o >= 0.8f)
+                        {
+                            child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_6", typeof(Material)) as Material;
+                        }
+                        else if (o >= 0.5f)
+                        {
+                            child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_5", typeof(Material)) as Material;
+                        }
+                        else if (o >= 0.1f)
+                        {
+                            child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_4", typeof(Material)) as Material;
+                        }
+                        else if (o >= 0.01f)
+                        {
+                            child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_3", typeof(Material)) as Material;
+                        }
+                        else if (o >= 0.001f)
+                        {
+                            child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_2", typeof(Material)) as Material;
+                        }
+                        else
+                        {
+                            child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_1", typeof(Material)) as Material;
+                        }
+
+                        //int o = Client.Lane.GetLastStepVehicleNumber(child.gameObject.name).Content;
+                        //if (o >= 10)
+                        //{
+                        //    child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_7", typeof(Material)) as Material;
+                        //}
+                        //else if (o >= 5)
+                        //{
+                        //    child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_6", typeof(Material)) as Material;
+                        //}
+                        //else if (o >= 4)
+                        //{
+                        //    child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_5", typeof(Material)) as Material;
+                        //}
+                        //else if (o >= 3)
+                        //{
+                        //    child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_4", typeof(Material)) as Material;
+                        //}
+                        //else if (o >= 2)
+                        //{
+                        //    child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_3", typeof(Material)) as Material;
+                        //}
+                        //else if (o >= 1)
+                        //{
+                        //    child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_2", typeof(Material)) as Material;
+                        //}
+                        //else
+                        //{
+                        //    child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_1", typeof(Material)) as Material;
+                        //}
+                    }
+                }
+
+                    Transform j = GameObject.Find("Junctions").transform;
+                    if (j != null)
+                    {
+                        foreach (Transform child in j)
+                        { 
+                            child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Occupancy_Material_2", typeof(Material)) as Material;
+                        }
+                    }
             }
             if (CarVisual)
             {
-                // Get all the car ids we need to keep track of. 
-                Traci.TraCIResponse<List<String>> CarIds = Client.Vehicle.GetIdList();
+                if (Client != null)
+                {
+                    if (VisualsSwitched)
+                    {
+                        //GameObject.Find("Occupancy_Legend").SetActive(false);
+                        Transform e = GameObject.Find("Edges").transform;
+                        foreach (Transform child in e)
+                        {
+                            child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Road_Material", typeof(Material)) as Material;
+                        }
+                        VisualsSwitched = false;
+                        Transform j = GameObject.Find("Junctions").transform;
+                        if (j != null)
+                        {
+                            foreach (Transform child in j)
+                            {
+                                child.gameObject.GetComponent<Renderer>().material = Resources.Load("Materials/Road_Material", typeof(Material)) as Material;
+                            }
+                        }
+                    }
 
-                CarIds.Content.ForEach(carId => {
-                    Traci.Types.Position3D pos = Client.Vehicle.GetPosition3D(carId).Content;
-                    Transform CarTransform = Cars_GO.transform.Find(carId);
-                    if (CarTransform != null)
-                    {
-                        CarTransform.position = new Vector3((float)pos.X, 0, (float)pos.Y);
-                    }
-                    else
-                    {
-                        GameObject car = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        car.name = carId;
-                        car.transform.parent = Cars_GO.transform;
-                        car.transform.position = new Vector3((float)pos.X, 1, (float)pos.Y);
-                    }
-                });
+                    Cars_GO = GameObject.Find("Cars");
+                    // Get all the car ids we need to keep track of. 
+                    Traci.TraCIResponse<List<String>> CarIds = Client.Vehicle.GetIdList();
+
+                    CarIds.Content.ForEach(carId => {
+                        Traci.Types.Position3D pos = Client.Vehicle.GetPosition3D(carId).Content;
+                        float rot = (float)Client.Vehicle.GetAngle(carId).Content;
+                        //Client.Vehicle.GetVehicleClass(carId).Content.Contains("bus");
+                        Transform CarTransform = Cars_GO.transform.Find(carId);
+                        if (CarTransform != null)
+                        {
+                            if (pos == null)
+                            {
+                                GameObject.Destroy(GameObject.Find(carId));
+                            }
+                            else
+                            {
+                                CarTransform.position = new Vector3((float)pos.X, 0.0f, (float)pos.Y);
+                                //if (CarTransform.rotation.y != rot)
+                                //{
+                                //    CarTransform.Rotate(0.0f, rot, 0.0f);    
+                                //}
+                                CarTransform.localEulerAngles = new Vector3(0, rot - 90.0f, 0);
+                            }
+                            
+                        }
+                        else
+                        {
+                            GameObject car = GameObject.Instantiate(Resources.Load("Prefabs/Vehicle", typeof(GameObject)) as GameObject, new Vector3((float)pos.X, 0.0f, (float)pos.Y), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), Cars_GO.transform);
+                           
+                            if(carId.Contains("bus")){
+                                 car.transform.Find("Bus").gameObject.SetActive(true);
+                                car.transform.Find("Car").gameObject.SetActive(false);
+                            }
+                            else if (carId.Contains("moto"))
+                            {
+                                car.transform.Find("Motorcycle").gameObject.SetActive(true);
+                                car.transform.Find("Car").gameObject.SetActive(false);
+
+                            }
+                            else if (carId.Contains("truck"))
+                            {
+                                car.transform.Find("BoxTruck").gameObject.SetActive(true);
+                                car.transform.Find("Car").gameObject.SetActive(false);
+
+                            }
+                            else if (carId.Contains("bicycle"))
+                            {
+                                car.transform.Find("Bicycle").gameObject.SetActive(true);
+                                car.transform.Find("Car").gameObject.SetActive(false);
+
+                            }
+                            else if (carId.Contains("ped"))
+                            {
+                                car.transform.Find("Pedestrian").gameObject.SetActive(true);
+                                car.transform.Find("Car").gameObject.SetActive(false);
+                            }
+                            
+                            car.name = carId;
+                            car.transform.parent = Cars_GO.transform;
+                            car.transform.position = new Vector3((float)pos.X, 0.0f, (float)pos.Y);
+                        }
+                    });
+                }
+                
             }
 
             Elapsedtime += Time.deltaTime;
