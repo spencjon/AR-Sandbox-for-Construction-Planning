@@ -12,13 +12,13 @@ public class UserController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Canvas.gameObject.SetActive(false);
+        Canvas.gameObject.SetActive(true);
 
         if (!Main_Camera.isActiveAndEnabled)
         {
             Main_Camera.gameObject.SetActive(true);
-            
         }
+
         Main_Camera.transform.position = new Vector3(0.0f, 0.0f, 0.0f);
         Main_Camera.fieldOfView = 10.0f;
         Main_Camera.farClipPlane = 1000000.0f;
@@ -28,6 +28,16 @@ public class UserController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            GameObject TC = GameObject.Find("Traci_Controller");
+            if (TC != null)
+            {
+                TC.GetComponent<TraciController>().OccupancyVisual = !TC.GetComponent<TraciController>().OccupancyVisual;
+                TC.GetComponent<TraciController>().CarVisual = !TC.GetComponent<TraciController>().CarVisual;
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.M))
         {
             if (Canvas.gameObject.activeSelf)
